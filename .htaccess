@@ -1,0 +1,6 @@
+Allow from all
+
+# enable directory listing
+<IfModule mod_autoindex.c>
+	Options +Indexes
+</IfModule>
