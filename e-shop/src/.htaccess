@@ -1,0 +1,6 @@
+# Author: Dominik Harmim <harmim6@gmail.com>
+
+# disable directory listing
+<IfModule mod_autoindex.c>
+	Options -Indexes
+</IfModule>
