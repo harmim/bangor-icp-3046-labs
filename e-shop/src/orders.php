@@ -65,7 +65,7 @@ siteHeader();
 		<span class="text-muted">
 			Date: 12. 12. 2017
 			❘ Order number: <strong>5118630647</strong>
-			❘ Status: <span class="text-success">processed</span>
+			❘ Status: <span class="text-success">complete</span>
 			❘ Price: <span class="text-danger">£&nbsp;419.91</span>
 		</span>
 	</h5>

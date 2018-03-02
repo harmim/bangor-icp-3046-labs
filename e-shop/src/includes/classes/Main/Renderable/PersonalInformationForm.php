@@ -31,7 +31,7 @@ class PersonalInformationForm implements IRenderable
 	 * Creates Personal information form component.
 	 *
 	 * @param string $action form action
-	 * @param array $formValues form options
+	 * @param array $options form options
 	 */
 	public function __construct(string $action, array $options = [])
 	{

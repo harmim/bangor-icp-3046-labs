@@ -68,6 +68,11 @@ siteHeader();
 			<!-- TODO: Fill this form with user data. -->
 			<h4 class="mb-3">Billing address</h4>
 
+			<div class="mb-3">
+				<label for="email">Email</label>
+				<input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+			</div>
+
 			<?php
 
 			$billingAddressForm = new AddressForm('billing', [
