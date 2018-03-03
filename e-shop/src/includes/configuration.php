@@ -12,6 +12,8 @@ use Main\Configuration;
 
 
 require_once __DIR__ . '/classes/Main/Configuration.php';
+require_once __DIR__ . '/functions/shortcuts.php';
+
+
 Configuration::initialize();
 
-require_once __DIR__ . '/functions/shortcuts.php';

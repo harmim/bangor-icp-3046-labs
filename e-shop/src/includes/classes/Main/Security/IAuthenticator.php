@@ -26,13 +26,13 @@ interface IAuthenticator
 
 	/**
 	 * Performs an authentication against e.g. database
-	 * and returns IIdentity on success or throws AuthenticationException
+	 * and returns IIdentity on success or throws AuthenticationException.
 	 *
 	 * @param string $username username
 	 * @param string $password password
 	 * @return IIdentity user identity
 	 *
-	 * @throws AuthenticationException
+	 * @throws AuthenticationException if authentication failed
 	 */
 	function authenticate(string $username, string $password): IIdentity;
 }

@@ -12,10 +12,15 @@ use Main\Configuration;
 
 
 require_once __DIR__ . '/includes/configuration.php';
+
+
 Configuration::setTitleSection('Orders');
+$user = Configuration::getLoggedUser();
 
-
-// TODO: Redirect away if user is not logged in.
+// redirect user to login page if he is logged out
+if (!$user) {
+	Configuration::redirect('login.php');
+}
 
 siteHeader();
 

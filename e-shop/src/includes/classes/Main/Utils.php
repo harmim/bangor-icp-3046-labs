@@ -16,10 +16,39 @@ namespace Main;
  */
 class Utils
 {
-	public static function getScriptName(): string
+	/**
+	 * Formats given price value.
+	 *
+	 * @param mixed $price price value
+	 * @return string formated price in string format
+	 */
+	public static function formatPrice($price): string
 	{
-		$explodedScriptName = explode(DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']);
+		return '£&nbsp;' . number_format((float) $price, 2, '.', ' ');
+	}
 
-		return pathinfo(end($explodedScriptName))['filename'];
+
+	/**
+	 * \DateTime object factory.
+	 *
+	 * @param string|int|\DateTimeInterface $time
+	 * @return \DateTime
+	 */
+	public static function datetime($time): \DateTime
+	{
+		if ($time instanceof \DateTimeInterface) {
+			return new \DateTime($time->format('Y-m-d H:i:s.u'), $time->getTimezone());
+
+		} elseif (is_numeric($time)) {
+			static $year = 31557600; // year in seconds
+			if ($time <= $year) {
+				$time += time();
+			}
+
+			return (new \DateTime("@$time"))->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+
+		} else { // textual or null
+			return new \DateTime($time);
+		}
 	}
 }

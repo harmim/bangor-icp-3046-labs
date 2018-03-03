@@ -22,7 +22,7 @@ class Passwords
 	 * @param string $password the user's password
 	 * @return string the hashed password
 	 *
-	 * @throws \UnexpectedValueException
+	 * @throws \UnexpectedValueException if computed hash is invalid
 	 */
 	public static function hash(string $password): string
 	{

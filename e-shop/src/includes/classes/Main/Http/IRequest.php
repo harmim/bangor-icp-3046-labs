@@ -25,6 +25,36 @@ interface IRequest
 
 
 	/**
+	 * Returns variable provided to the script via URL query ($_GET).
+	 * If no key is passed, returns the entire array.
+	 *
+	 * @param string $key key of $_GET variable
+	 * @return mixed $_GET variable
+	 */
+	function getQuery(string $key = null);
+
+
+	/**
+	 * Returns variable provided to the script via POST method ($_POST).
+	 * If no key is passed, returns the entire array.
+	 *
+	 * @param string $key key of $_POST variable
+	 * @return mixed $_POST variable
+	 */
+	function getPost(string $key = null);
+
+
+	/**
+	 * Returns variable provided to the script via HTTP cookies ($_COOKIE).
+	 * If no key is passed, returns the entire array.
+	 *
+	 * @param string $key key of $_COOKIE variable
+	 * @return mixed HTTP $_COOKIE variable
+	 */
+	function getCookie(string $key = null);
+
+
+	/**
 	 * Returns HTTP request method.
 	 *
 	 * @return string HTTP request method.
@@ -39,4 +69,22 @@ interface IRequest
 	 * @return bool true if methods are equal, false otherwise
 	 */
 	function isMethod(string $method): bool;
+
+
+	/**
+	 * Returns the IP address of the remote client.
+	 *
+	 * @return string|null IP address of the remote client
+	 */
+	function getRemoteAddress(): ?string;
+
+
+	/**
+	 * Returns running script name.
+	 *
+	 * @param bool $withExtension get file with extension
+	 * @param bool $fullPath get full path of script
+	 * @return string running script name
+	 */
+	function getScriptName(bool $withExtension = false, bool $fullPath = false): string;
 }

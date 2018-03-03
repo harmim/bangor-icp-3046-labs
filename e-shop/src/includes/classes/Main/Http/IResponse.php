@@ -64,4 +64,47 @@ interface IResponse
 	 * @return void
 	 */
 	function redirect(string $url, int $code = self::C302_FOUND): void;
+
+
+	/**
+	 * Checks if headers have been sent.
+	 *
+	 * @return  bool true if headers have been sent, false otherwise
+	 */
+	function isSent(): bool;
+
+
+	/**
+	 * Sends a cookie.
+	 *
+	 * @param string $name cookie name
+	 * @param string $value cookie value
+	 * @param string|int|\DateTimeInterface $expire time, value 0 means "until the browser is closed"
+	 * @param string $path cookie path
+	 * @param string $domain cookie domain
+	 * @param bool $secure is cookie indicates that the cookie should only be transmitted over a secure HTTPS
+	 * @param bool $httpOnly when TRUE the cookie will be made accessible only through the HTTP protocol
+	 * @return IResponse
+	 */
+	function setCookie(
+		string $name,
+		string $value,
+		$expire,
+		string $path = null,
+		string $domain = null,
+		bool $secure = null,
+		bool $httpOnly = null
+	): IResponse;
+
+
+	/**
+	 * Deletes a cookie.
+	 *
+	 * @param string $name cookie name
+	 * @param string $path cookie path
+	 * @param string $domain cookie domain
+	 * @param bool $secure is cookie indicates that the cookie should only be transmitted over a secure HTTPS
+	 * @return IResponse
+	 */
+	function deleteCookie(string $name, string $path = null, string $domain = null, bool $secure = null): IResponse;
 }

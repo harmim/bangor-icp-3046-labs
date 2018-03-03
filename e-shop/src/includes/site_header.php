@@ -8,8 +8,7 @@
 
 declare(strict_types=1);
 
-use Main\Renderable\Messages;
-
+use Main\Renderable;
 
 ?>
 
@@ -24,4 +23,4 @@ use Main\Renderable\Messages;
 	</header>
 
 	<main role="main" class="container">
-		<?php Messages::render(); ?>
+		<?php Renderable\Messages::render(); ?>

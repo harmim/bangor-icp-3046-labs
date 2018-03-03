@@ -35,6 +35,7 @@ class AddressForm implements IRenderable
 	 */
 	public function __construct(string $formName, array $options = [])
 	{
+		$this->formName = $formName;
 		$this->options = $options;
 	}
 
@@ -75,8 +76,8 @@ class AddressForm implements IRenderable
 				</div>
 			</div>
 			',
-			$this->options['forename']['value'],
-			$this->options['surname']['value']
+			escape($this->options['forename']['value']),
+			escape($this->options['surname']['value'])
 		);
 		$html = str_replace('formName', $this->formName, $html);
 

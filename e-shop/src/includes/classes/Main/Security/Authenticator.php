@@ -9,11 +9,12 @@ declare(strict_types=1);
 namespace Main\Security;
 
 use Main\Configuration;
+use Main\Service;
 
 
 /**
  * IAuthenticator implementation.
- * Performs an authentication against database and static credential.
+ * Performs an authentication against database.
  *
  * @package Main\Security
  */
@@ -25,32 +26,21 @@ class Authenticator implements IAuthenticator
 	public function authenticate(string $username, string $password): IIdentity
 	{
 		$errorMessage = 'The credentials you entered are incorrect.';
+		/** @var Service\UserService $userService */
+		$userService = Configuration::getService(Service\UserService::class);
 
-		if ($username === Configuration::STATIC_USERNAME) {
-			// This static user should be in database as user with ID 1 or this static authentication should
-			// be deleted later.
-			$user = new Identity(1, [
-				'email' => $username,
-			]);
-			$userPassword = Configuration::STATIC_PASSWORD;
-
-		} elseif (false) {
-			// TODO: Authentication against database.
-			$user = new Identity(0, []);
-			$userPassword = '';
-
-		} else {
+		if (!($user = $userService->getUserByEmail($username))) {
 			throw new AuthenticationException($errorMessage, self::IDENTITY_NOT_FOUND);
-		}
 
-		if (!Passwords::verify($password, $userPassword)) {
+		} elseif (!Passwords::verify($password, $user['password'])) {
 			throw new AuthenticationException($errorMessage, self::INVALID_CREDENTIAL);
 
-		} elseif (Passwords::needsRehash($userPassword)) {
-			// TODO: Set new password to user.
-			$newPassword = Passwords::hash($password);
+		} elseif (Passwords::needsRehash($user['password'])) {
+			$userService->updateUser($user['id'], [
+				'password' => Passwords::hash($password),
+			]);
 		}
 
-		return $user;
+		return new Identity($user['id'], $user);
 	}
 }

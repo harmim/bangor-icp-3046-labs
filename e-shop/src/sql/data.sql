@@ -10,11 +10,11 @@ USE `icp3046_eshop`;
 -- users
 INSERT INTO `user` (`email`, `password`, `forename`, `surname`)
 VALUES
-	('harmim6@gmail.com', '$2a$10$cbqNIDsZWkQjn4N5MnPo8.0di5XT2UPXYpy3avKPvcFnm5hX/H89a', 'Dominik', 'Harmim'),
-	('smith@gmail.com', '$2a$10$4Ls5bb2ADcR4cqT40aNb5esFHDcVHqc/fgxqpe0hfpilFf5yzvkCW', 'Matt', 'Smith'),
-	('novak@gmail.com', '$2a$10$s6a6zBARDa.5KDw8a22OrujfMxhiftGie2v220C06dcUOVJxPIYD2', 'John', 'Novak'),
-	('thompson@gmail.com', '$2a$10$5cM6JRD8INODKU.YzOl1U.jdDwYyxWcwCka5kxwAOybLKrwyCiuta', 'Cattie', 'Thompson'),
-	('bentron@gmail.com', '$2a$10$0nRb0qH4La7ky2RU61z/2.UgWss87txXxPg6EAoaiQKYicbZ3N5F.', 'Mark', 'Benton');
+	('harmim6@gmail.com', '$2y$10$GXM7zdSXNYP6nvidVRWEK.In2pupdk/.gnD/1GiQ3/FEVqWQb2fEy', 'Dominik', 'Harmim'),
+	('smith@gmail.com', '$2y$10$IlPwTiZaO4MHUpZDlzk5YufmDxC19vuiiDDfJxHMgNuygrq9D07dK', 'Matt', 'Smith'),
+	('novak@gmail.com', '$2y$10$NceNGMMUukkOkc.r1TXFx.uy3jdY1FU97d7mYbRaVxpyDqXPXeOnK', 'John', 'Novak'),
+	('thompson@gmail.com', '$2y$10$teQw71zQNmnGFByiefmUR.QCfCYlhBxPbIZg3Pnk8Yum/K1J9PFra', 'Cattie', 'Thompson'),
+	('bentron@gmail.com', '$2y$10$DDj6Y/ZkU5fGzFQH9gSS4.GETKLIF.Zvh5oGtOySg48KTuJLMmBWa', 'Mark', 'Benton');
 
 
 -- products

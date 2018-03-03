@@ -12,8 +12,9 @@ use Main\Configuration;
 
 
 require_once __DIR__ . '/includes/configuration.php';
-Configuration::setTitleSection('Order resume');
 
+
+Configuration::setTitleSection('Order resume');
 
 siteHeader();
 

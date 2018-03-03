@@ -35,6 +35,7 @@ class PersonalInformationForm implements IRenderable
 	 */
 	public function __construct(string $action, array $options = [])
 	{
+		$this->action = $action;
 		$this->options = $options;
 	}
 
@@ -83,17 +84,18 @@ class PersonalInformationForm implements IRenderable
 	
 				<hr class="mb-4">
 	
-				<button class="btn btn-primary btn-lg btn-block" type="submit" name="submit">%s</button>
+				<button class="btn btn-primary btn-lg btn-block" type="submit" value="1" name="submit">%s</button>
 			</form>
 			
 			',
 			$this->action,
-			$this->options['email']['value'] ?? '', !empty($this->options['email']['disabled']) ? 'disabled' : '',
-			$this->options['forename']['value'] ?? '',
-			$this->options['surname']['value'] ?? '',
+			isset($this->options['email']['value']) ? escape($this->options['email']['value']) : '',
+			!empty($this->options['email']['disabled']) ? 'disabled' : '',
+			isset($this->options['forename']['value']) ? escape($this->options['forename']['value']) : '',
+			isset($this->options['surname']['value']) ? escape($this->options['surname']['value']) : '',
 			!empty($this->options['password']['required']) ? 'required' : '',
 			!empty($this->options['confirmPassword']['required']) ? 'required' : '',
-			$this->options['submit']['value'] ?? ''
+			isset($this->options['submit']['value']) ? escape($this->options['submit']['value']) : ''
 		);
 	}
 }

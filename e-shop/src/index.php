@@ -8,135 +8,48 @@
 
 declare(strict_types=1);
 
+use Main\Configuration;
+use Main\Service;
+use Main\Strings;
+use Main\Utils;
+
 
 require_once __DIR__ . '/includes/configuration.php';
 
+
+// get all products
+/** @var Service\ProductService $productService */
+$productService = Configuration::getService(Service\ProductService::class);
+$products = $productService->getAllProducts();
 
 siteHeader();
 
 ?>
 
-<!-- TODO: Display products from database. -->
 <div class="row">
-	<div class="col-lg-3">
-		<div class="card mb-3 box-shadow">
-			<a href="product.php"><img class="card-img-top" src="images/products/illust/product.jpg" alt="Product"></a>
+	<?php foreach ($products as $product): ?>
+		<div class="col-lg-3">
+			<div class="card mb-3 box-shadow product-box">
+				<a href="product.php?id=<?= escape($product['id']) ?>">
+					<img class="card-img-top" src="<?= $productService->getImageRelativePath($product['image']) ?>" alt="<?= escape($product['name']); ?>">
+				</a>
 
-			<div class="card-body">
-				<p class="card-text">
-					<a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a>
-				</p>
-				<div class="d-flex justify-content-between align-items-center">
-					<small class="text-danger">£&nbsp;139.97</small>
-					<div class="btn-group">
-						<a href="buy.php" class="btn btn-sm btn-outline-success">
-							<i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy
-						</a>
+				<div class="card-body">
+					<p class="card-text product-name">
+						<a href="product.php?id=<?= escape($product['id']) ?>"><?= escape(Strings::truncate($product['name'], 70)); ?></a>
+					</p>
+					<div class="d-flex justify-content-between align-items-center">
+						<small class="text-danger"><?= Utils::formatPrice($product['price']) ?></small>
+						<div class="btn-group">
+							<a href="buy.php?id=<?= escape($product['id']) ?>" class="btn btn-sm btn-outline-success">
+								<i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-
-	<div class="col-lg-3">
-		<div class="card mb-3 box-shadow">
-			<a href="product.php"><img class="card-img-top" src="images/products/illust/product.jpg" alt="Product"></a>
-
-			<div class="card-body">
-				<p class="card-text">
-					<a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a>
-				</p>
-				<div class="d-flex justify-content-between align-items-center">
-					<small class="text-danger">£&nbsp;139.97</small>
-					<div class="btn-group">
-						<a href="buy.php" class="btn btn-sm btn-outline-success">
-							<i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="col-lg-3">
-		<div class="card mb-3 box-shadow">
-			<a href="product.php"><img class="card-img-top" src="images/products/illust/product.jpg" alt="Product"></a>
-
-			<div class="card-body">
-				<p class="card-text">
-					<a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a>
-				</p>
-				<div class="d-flex justify-content-between align-items-center">
-					<small class="text-danger">£&nbsp;139.97</small>
-					<div class="btn-group">
-						<a href="buy.php" class="btn btn-sm btn-outline-success">
-							<i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="col-lg-3">
-		<div class="card mb-3 box-shadow">
-			<a href="product.php"><img class="card-img-top" src="images/products/illust/product.jpg" alt="Product"></a>
-
-			<div class="card-body">
-				<p class="card-text">
-					<a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a>
-				</p>
-				<div class="d-flex justify-content-between align-items-center">
-					<small class="text-danger">£&nbsp;139.97</small>
-					<div class="btn-group">
-						<a href="buy.php" class="btn btn-sm btn-outline-success">
-							<i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="col-lg-3">
-		<div class="card mb-3 box-shadow">
-			<a href="product.php"><img class="card-img-top" src="images/products/illust/product.jpg" alt="Product"></a>
-
-			<div class="card-body">
-				<p class="card-text">
-					<a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a>
-				</p>
-				<div class="d-flex justify-content-between align-items-center">
-					<small class="text-danger">£&nbsp;139.97</small>
-					<div class="btn-group">
-						<a href="buy.php" class="btn btn-sm btn-outline-success">
-							<i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="col-lg-3">
-		<div class="card mb-3 box-shadow">
-			<a href="product.php"><img class="card-img-top" src="images/products/illust/product.jpg" alt="Product"></a>
-
-			<div class="card-body">
-				<p class="card-text">
-					<a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a>
-				</p>
-				<div class="d-flex justify-content-between align-items-center">
-					<small class="text-danger">£&nbsp;139.97</small>
-					<div class="btn-group">
-						<a href="buy.php" class="btn btn-sm btn-outline-success">
-							<i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	<?php endforeach; ?>
 </div>
 
 <?php siteFooter(); ?>

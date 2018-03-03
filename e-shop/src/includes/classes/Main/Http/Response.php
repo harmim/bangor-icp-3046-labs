@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Main\Http;
 
+use Main\Utils;
+
 
 /**
  * HTTP response implementation.
@@ -17,9 +19,19 @@ namespace Main\Http;
 class Response implements IResponse
 {
 	/**
+	 * Cookie options.
+	 */
+	private const
+		COOKIE_DOMAIN = '',
+		COOKIE_PATH = '/',
+		COOKIE_SECURE = false,
+		COOKIE_HTTP_ONLY = true;
+
+
+	/**
 	 * @var int HTTP code
 	 */
-	private $code;
+	private $code = self::C200_OK;
 
 
 	public function __construct()
@@ -86,6 +98,55 @@ class Response implements IResponse
 		$this->setCode($code);
 		$this->setHeader('Location', $url);
 		exit(0);
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function isSent(): bool
+	{
+		return headers_sent();
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function setCookie(
+		string $name,
+		string $value,
+		$expire,
+		string $path = null,
+		string $domain = null,
+		bool $secure = null,
+		bool $httpOnly = null
+	): IResponse
+	{
+		self::checkHeaders();
+
+		setcookie(
+			$name,
+			$value,
+			$expire ? (int) Utils::datetime($expire)->format('U') : 0,
+			$path === null ? self::COOKIE_PATH : $path,
+			$domain === null ? self::COOKIE_DOMAIN : $domain,
+			$secure === null ? self::COOKIE_SECURE : $secure,
+			$httpOnly === null ? self::COOKIE_HTTP_ONLY : $httpOnly
+		);
+
+		return $this;
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function deleteCookie(string $name, string $path = null, string $domain = null, bool $secure = null): IResponse
+	{
+		$this->setCookie($name, '', 0, $path, $domain, $secure);
+
+		return $this;
 	}
 
 

@@ -12,11 +12,11 @@ use Main\Configuration;
 
 
 require_once __DIR__ . '/includes/configuration.php';
+
+
 Configuration::setTitleSection('Basket');
 
-
 // TODO: Recalculate, validate and process basket.
-// TODO: Maybe redirect logged out user away if basket is only for logged users.
 
 siteHeader();
 
@@ -69,7 +69,7 @@ siteHeader();
 				</td>
 
 				<td class="text-right">
-					<button type="submit" name="remove1" class="btn btn-sm">
+					<button type="submit" value="1" name="remove1" class="btn btn-sm">
 						<i class="fa fa-times fa-2x text-danger"></i>
 					</button>
 				</td>
@@ -104,7 +104,7 @@ siteHeader();
 				</td>
 
 				<td class="text-right">
-					<button type="submit" name="remove1" class="btn btn-sm">
+					<button type="submit" value="2" name="remove2" class="btn btn-sm">
 						<i class="fa fa-times fa-2x text-danger"></i>
 					</button>
 				</td>
@@ -137,7 +137,7 @@ siteHeader();
 				</td>
 
 				<td class="text-right">
-					<button type="submit" name="remove1" class="btn btn-sm">
+					<button type="submit" value="3" name="remove3" class="btn btn-sm">
 						<i class="fa fa-times fa-2x text-danger"></i>
 					</button>
 				</td>
@@ -162,13 +162,13 @@ siteHeader();
 		<div class="col-lg-6"></div>
 
 		<div class="col-lg-3 mb-2">
-			<button type="submit" name="recalculate" class="btn btn-lg btn-secondary text-white">
+			<button type="submit" value="1" name="recalculate" class="btn btn-lg btn-secondary text-white">
 				Recalculate Basket
 			</button>
 		</div>
 
 		<div class="col-lg-3">
-			<button type="submit" name="checkout" class="btn btn-primary btn-lg text-white">
+			<button type="submit" value="1" name="checkout" class="btn btn-primary btn-lg text-white">
 				Continue to Checkout
 			</button>
 		</div>

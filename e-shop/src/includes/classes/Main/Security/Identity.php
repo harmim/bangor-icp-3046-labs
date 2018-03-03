@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Main\Security;
 
+
 /**
  * Default implementation of IIdentity with array data.
  *

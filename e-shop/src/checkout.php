@@ -9,12 +9,13 @@
 declare(strict_types=1);
 
 use Main\Configuration;
-use Main\Renderable\AddressForm;
+use Main\Renderable;
 
 
 require_once __DIR__ . '/includes/configuration.php';
-Configuration::setTitleSection('Checkout process');
 
+
+Configuration::setTitleSection('Checkout process');
 
 // TODO: Redirect user away if his Basket is empty or if he can't checkout for any other reason.
 // TODO: Fill, process and validate checkout form.
@@ -75,7 +76,7 @@ siteHeader();
 
 			<?php
 
-			$billingAddressForm = new AddressForm('billing', [
+			$billingAddressForm = new Renderable\AddressForm('billing', [
 				'forename' => [
 					'value' => 'Dominik',
 				],
@@ -99,7 +100,7 @@ siteHeader();
 
 				<?php
 
-				$billingAddressForm = new AddressForm('shipping', [
+				$billingAddressForm = new Renderable\AddressForm('shipping', [
 					'forename' => [
 						'value' => 'Dominik',
 					],
@@ -161,7 +162,7 @@ siteHeader();
 
 			<hr class="mb-4">
 
-			<button class="btn btn-primary btn-lg btn-block" type="submit" name="submit">Confirm order</button>
+			<button class="btn btn-primary btn-lg btn-block" type="submit" value="1" name="submit">Confirm order</button>
 		</form>
 	</div>
 </div>

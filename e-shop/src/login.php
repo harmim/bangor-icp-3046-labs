@@ -14,27 +14,36 @@ use Main\Security;
 
 
 require_once __DIR__ . '/includes/configuration.php';
+
+
 Configuration::setTitleSection('Login');
 
-// TODO: Redirect user away if he is already login.
+// redirect user to personal information page if he is already logged in
+if (Configuration::getLoggedUser()) {
+	Configuration::redirect('personalInformation.php');
+}
 
-// Process and validate login form
-$showLoginForm = true;
-if (isset($_POST['submit'])) {
-	if (isset($_POST['email'], $_POST['password'])) {
+// process and validate login form
+$values = Configuration::getHttpRequest()->getPost();
+if (isset($values['submit'])) {
+	if (isset($values['email'], $values['password'])) {
 		try {
-			Configuration::setUser((new Security\Authenticator())->authenticate($_POST['email'], $_POST['password']));
+			Configuration::setLoggedUser((new Security\Authenticator())->authenticate($values['email'], $values['password']));
 			Renderable\Messages::addMessage(
 				'You have been successfully logged in.',
 				Renderable\Messages::TYPE_SUCCESS
 			);
-			$showLoginForm = false;
+
+			Configuration::redirect('index.php');
 
 		} catch (Security\AuthenticationException $e) {
 			Renderable\Messages::addMessage($e->getMessage(), Renderable\Messages::TYPE_DANGER);
 		}
 	} else {
-		Renderable\Messages::addMessage('Authentication error.', Renderable\Messages::TYPE_DANGER);
+		Renderable\Messages::addMessage(
+			'Please enter all required fields.',
+			Renderable\Messages::TYPE_DANGER
+		);
 	}
 }
 
@@ -42,30 +51,28 @@ siteHeader();
 
 ?>
 
-<?php if ($showLoginForm): ?>
-	<div class="row">
-		<div class="col-md-8">
-			<h4 class="mb-3">Login</h4>
+<div class="row">
+	<div class="col-md-8">
+		<h4 class="mb-3">Login</h4>
 
-			<form class="needs-validation" method="post" action="login.php">
-				<div class="form-row">
-					<div class="col-md-6 form-group">
-						<label for="email">Email</label>
-						<input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
-					</div>
-
-					<div class="col-md-6 form-group">
-						<label for="password">Password</label>
-						<input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
-					</div>
+		<form class="needs-validation" method="post" action="login.php">
+			<div class="form-row">
+				<div class="col-md-6 form-group">
+					<label for="email">Email</label>
+					<input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
 				</div>
 
-				<hr class="mb-4">
+				<div class="col-md-6 form-group">
+					<label for="password">Password</label>
+					<input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+				</div>
+			</div>
 
-				<button class="btn btn-primary btn-lg btn-block" type="submit" name="submit">Login</button>
-			</form>
-		</div>
+			<hr class="mb-4">
+
+			<button class="btn btn-primary btn-lg btn-block" type="submit" value="1" name="submit">Login</button>
+		</form>
 	</div>
-<?php endif; ?>
+</div>
 
 <?php siteFooter(); ?>

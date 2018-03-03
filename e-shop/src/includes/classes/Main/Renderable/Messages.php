@@ -56,9 +56,11 @@ class Messages implements IRenderableStatic
 					</div>
 				';
 
-				printf($html, $type, $message);
+				printf($html, $type, escape($message));
 			}
 		}
+
+		self::cleanMessages();
 	}
 
 
@@ -69,12 +71,13 @@ class Messages implements IRenderableStatic
 	 * @param string $type one of TYPE_... constant
 	 * @return void
 	 */
-	public static function addMessage(string $message, string $type): void
+	public static function addMessage(string $message, string $type = self::TYPE_INFO): void
 	{
 		if (!in_array($type, self::TYPES, true)) {
 			trigger_error(sprintf('Unknown message type %s.', $type), E_USER_WARNING);
 		}
 
+		// TODO: add message to session
 		self::$messages[$type][] = $message;
 	}
 
@@ -86,6 +89,7 @@ class Messages implements IRenderableStatic
 	 */
 	public static function cleanMessages(): void
 	{
+		// TODO: remove messages from session
 		self::$messages = [];
 	}
 }

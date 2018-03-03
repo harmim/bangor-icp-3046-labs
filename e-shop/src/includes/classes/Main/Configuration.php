@@ -10,6 +10,7 @@ namespace Main;
 
 use Main\Http;
 use Main\Security;
+use Main\Service;
 
 
 /**
@@ -25,11 +26,13 @@ class Configuration
 	public const DEFAULT_HTML_TITLE = 'Inside';
 
 	/**
-	 * static username and password
+	 * database details
 	 */
-	public const
-		STATIC_USERNAME = 'harmim6@gmail.com',
-		STATIC_PASSWORD = '$2y$10$l6ALu1Y9.wo2h57Cxm5iPOTOlljFlVtZelqp/C0NlTjQXlESNBwl2';
+	private const
+		DATABASE_HOST = 'localhost',
+		DATABASE_NAME = 'icp3046_eshop',
+		DATABASE_USER = 'root',
+		DATABASE_PASSWORD = '';
 
 
 	/**
@@ -48,14 +51,19 @@ class Configuration
 	private static $user;
 
 	/**
-	 * @var Http\IRequest HTTP request
+	 * @var Http\IRequest|null HTTP request
 	 */
 	private static $httpRequest;
 
 	/**
-	 * @var Http\IResponse HTTP response
+	 * @var Http\IResponse HTTP|null response
 	 */
 	private static $httpResponse;
+
+	/**
+	 * @var array array of instances of services classes
+	 */
+	private static $services = [];
 
 
 	/**
@@ -67,10 +75,14 @@ class Configuration
 	{
 		self::setErrorReporting();
 		self::autoloadRegister();
-
-		self::$httpRequest = new Http\Request();
-		self::$httpResponse = new Http\Response();
 		self::setHtmlHeaders();
+
+		Database::initialize(
+			self::DATABASE_HOST,
+			self::DATABASE_NAME,
+			self::DATABASE_USER,
+			self::DATABASE_PASSWORD
+		);
 	}
 
 
@@ -112,7 +124,7 @@ class Configuration
 	/**
 	 * Finds out if is debug mode enable.
 	 *
-	 * @return bool
+	 * @return bool true if debug mode is enabled, false otherwise
 	 */
 	public static function isDebugMode(): bool
 	{
@@ -123,7 +135,7 @@ class Configuration
 	/**
 	 * Turn on/off debug mode.
 	 *
-	 * @param bool $debugMode
+	 * @param bool $debugMode on/off debug mode
 	 * @return void
 	 */
 	public static function setDebugMode(bool $debugMode): void
@@ -137,8 +149,9 @@ class Configuration
 	 *
 	 * @return Security\IIdentity|null user identity
 	 */
-	public static function getUser(): ?Security\IIdentity
+	public static function getLoggedUser(): ?Security\IIdentity
 	{
+		// TODO: get user fom session
 		return self::$user;
 	}
 
@@ -149,7 +162,7 @@ class Configuration
 	 * @param Security\IIdentity|null $user user identity
 	 * @return void
 	 */
-	public static function setUser(?Security\IIdentity $user): void
+	public static function setLoggedUser(?Security\IIdentity $user): void
 	{
 		self::$user = $user;
 		// TODO: store to session or cookie
@@ -163,6 +176,10 @@ class Configuration
 	 */
 	public static function getHttpRequest(): Http\IRequest
 	{
+		if (!self::$httpRequest) {
+			self::$httpRequest = new Http\Request();
+		}
+
 		return self::$httpRequest;
 	}
 
@@ -174,18 +191,52 @@ class Configuration
 	 */
 	public static function getHttpResponse(): Http\IResponse
 	{
+		if (!self::$httpResponse) {
+			self::$httpResponse = new Http\Response();
+		}
+
 		return self::$httpResponse;
 	}
 
 
+	/**
+	 * Returns instance of service of given class.
+	 *
+	 * @param string $class class name of service
+	 * @return Service\ProductService|Service\UserService|null|object
+	 */
+	public static function getService(string $class)
+	{
+		if (isset(self::$services[$class])) {
+			return self::$services[$class];
+		}
+
+		if (!class_exists($class)) {
+			$instance = null;
+		} else {
+			$instance = new $class();
+		}
+
+		return self::$services[$class] = $instance;
+	}
+
+
+	/**
+	 * Redirect to new URL.
+	 *
+	 * @param string $url url for redirection
+	 * @param int|null $code HTTP code
+	 * @return void
+	 */
 	public static function redirect(string $url, int $code = null): void
 	{
 		if ($code === null) {
-			$code = self::$httpRequest->isMethod(Http\IRequest::METHOD_POST)
+			$code = self::getHttpRequest()->isMethod(Http\IRequest::METHOD_POST)
 				? Http\IResponse::C303_POST_GET
 				: Http\IResponse::C302_FOUND;
 		}
-		self::$httpResponse->redirect($url, $code);
+
+		self::getHttpResponse()->redirect($url, $code);
 	}
 
 
@@ -229,6 +280,6 @@ class Configuration
 	 */
 	private static function setHtmlHeaders(): void
 	{
-		self::$httpResponse->setContentType('text/html');
+		self::getHttpResponse()->setContentType('text/html');
 	}
 }

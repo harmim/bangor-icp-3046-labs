@@ -12,7 +12,7 @@ USE `icp3046_eshop`;
 
 
 -- Created and edited columns tells when the product has been created or edited, auto insert current datetime,
--- moreover edited column is automatically updated on product update.
+-- moreover edited column is automatically updated on item update.
 
 -- Prices are numeric (decimal) data types because it is useless storing them as float or double value.
 

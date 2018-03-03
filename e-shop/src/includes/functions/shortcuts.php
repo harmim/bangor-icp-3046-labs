@@ -29,3 +29,15 @@ function siteFooter(): void
 {
 	require_once __DIR__ . '/../site_footer.php';
 }
+
+
+/**
+ * Shortcut for Main\Strings::escape with string casting.
+ *
+ * @param mixed $input input for Main\Strings::escape
+ * @return string Main\Strings::escape result
+ */
+function escape($input): string
+{
+	return Main\Strings::escape((string) $input);
+}

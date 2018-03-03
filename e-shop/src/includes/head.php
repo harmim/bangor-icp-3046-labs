@@ -15,7 +15,7 @@ use Main\Configuration;
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<title><?= Configuration::getTitle(); ?></title>
+<title><?= escape(Configuration::getTitle()); ?></title>
 
 <meta name="description" content="Inside - hardware components e-shop.">
 <meta name="author" content="DominikHarmim, harmim6@gmail.com">

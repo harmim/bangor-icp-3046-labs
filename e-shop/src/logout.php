@@ -8,7 +8,14 @@
 
 declare(strict_types=1);
 
+use Main\Configuration;
+use Main\Renderable;
+
 
 require_once __DIR__ . '/includes/configuration.php';
 
-// TODO: logout user if he is logged in and redirect somewhere
+
+// logout and redirect user
+Configuration::setLoggedUser(null);
+Renderable\Messages::addMessage('You have been successfully logged out.');
+Configuration::redirect('index.php');
