@@ -14,8 +14,14 @@ use Main\Renderable;
 
 require_once __DIR__ . '/includes/configuration.php';
 
+$user = Configuration::getUser();
+
+// if user is logged out, redirect to login page
+if (!$user->isLoggedIn()) {
+	Configuration::redirect('login.php');
+}
 
 // logout and redirect user
-Configuration::setLoggedUser(null);
+$user->logout();
 Renderable\Messages::addMessage('You have been successfully logged out.');
 Configuration::redirect('index.php');

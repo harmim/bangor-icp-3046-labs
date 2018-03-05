@@ -12,7 +12,7 @@ use Main\Configuration;
 
 
 $scriptName = Configuration::getHttpRequest()->getScriptName();
-$user = Configuration::getLoggedUser();
+$isLoggedIn = Configuration::getUser()->isLoggedIn();
 
 ?>
 
@@ -29,19 +29,19 @@ $user = Configuration::getLoggedUser();
 				<a class="nav-link" href="index.php">Home</a>
 			</li>
 
-			<?php if (!$user): ?>
+			<?php if (!$isLoggedIn): ?>
 				<li class="nav-item <?php if ($scriptName === 'registration') echo 'active'; ?>">
 					<a class="nav-link" href="registration.php">Registration</a>
 				</li>
 			<?php endif; ?>
 
-			<?php if ($user): ?>
+			<?php if ($isLoggedIn): ?>
 				<li class="nav-item <?php if ($scriptName === 'personalInformation') echo 'active'; ?>">
 					<a class="nav-link" href="personalInformation.php">Personal information</a>
 				</li>
 			<?php endif; ?>
 
-			<?php if ($user): ?>
+			<?php if ($isLoggedIn): ?>
 				<li class="nav-item <?php if ($scriptName === 'orders') echo 'active'; ?>">
 					<a class="nav-link" href="orders.php">Orders</a>
 				</li>
@@ -49,13 +49,13 @@ $user = Configuration::getLoggedUser();
 		</ul>
 
 		<ul class="navbar-nav float-lg-right">
-			<?php if (!$user): ?>
+			<?php if (!$isLoggedIn): ?>
 				<li class="nav-item <?php if ($scriptName === 'login') echo 'active'; ?>">
 					<a class="nav-link" href="login.php">Login <i class="fa fa-sign-in" aria-hidden="true"></i></a>
 				</li>
 			<?php endif; ?>
 
-			<?php if ($user): ?>
+			<?php if ($isLoggedIn): ?>
 				<li class="nav-item">
 					<a class="nav-link" href="logout.php">Logout <i class="fa fa-sign-out" aria-hidden="true"></i></a>
 				</li>

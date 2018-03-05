@@ -31,7 +31,7 @@ class Utils
 	/**
 	 * \DateTime object factory.
 	 *
-	 * @param string|int|\DateTimeInterface $time
+	 * @param string|int|\DateTimeInterface|null $time
 	 * @return \DateTime
 	 */
 	public static function datetime($time): \DateTime

@@ -45,7 +45,7 @@ class Response implements IResponse
 	/**
 	 * @inheritdoc
 	 *
-	 * @throws \InvalidArgumentException
+	 * @throws \InvalidArgumentException in case of bad HTTP code
 	 */
 	public function setCode(int $code): IResponse
 	{
@@ -155,16 +155,15 @@ class Response implements IResponse
 	 *
 	 * @return void
 	 *
-	 * @throws \RuntimeException
+	 * @throws \RuntimeException if headers have been sent
 	 */
 	private function checkHeaders(): void
 	{
 		if (PHP_SAPI === 'cli') {
 			return;
 
-		} elseif (headers_sent($file, $line)) {
-			throw new \RuntimeException('Cannot send header after HTTP headers have been sent'
-				. ($file ? " (output started at $file:$line)." : '.'));
+		} elseif ($this->isSent()) {
+			throw new \RuntimeException('Cannot send header after HTTP headers have been sent.');
 		}
 	}
 }

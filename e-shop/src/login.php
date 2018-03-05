@@ -17,18 +17,20 @@ require_once __DIR__ . '/includes/configuration.php';
 
 
 Configuration::setTitleSection('Login');
+$user = Configuration::getUser();
 
 // redirect user to personal information page if he is already logged in
-if (Configuration::getLoggedUser()) {
+if ($user->isLoggedIn()) {
 	Configuration::redirect('personalInformation.php');
 }
 
 // process and validate login form
-$values = Configuration::getHttpRequest()->getPost();
-if (isset($values['submit'])) {
-	if (isset($values['email'], $values['password'])) {
+$form = Configuration::getHttpRequest()->getPost();
+if (isset($form['submit'])) {
+	if (!empty($form['email']) && !empty($form['password'])) {
 		try {
-			Configuration::setLoggedUser((new Security\Authenticator())->authenticate($values['email'], $values['password']));
+			$user->login($form['email'], $form['password']);
+			$user->setExpiration('7 days');
 			Renderable\Messages::addMessage(
 				'You have been successfully logged in.',
 				Renderable\Messages::TYPE_SUCCESS

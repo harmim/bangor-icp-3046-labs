@@ -16,4 +16,3 @@ require_once __DIR__ . '/functions/shortcuts.php';
 
 
 Configuration::initialize();
-

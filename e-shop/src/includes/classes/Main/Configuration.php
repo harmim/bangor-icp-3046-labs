@@ -34,6 +34,11 @@ class Configuration
 		DATABASE_USER = 'root',
 		DATABASE_PASSWORD = '';
 
+	/**
+	 * time zone
+	 */
+	private const TIME_ZONE = 'Europe/London';
+
 
 	/**
 	 * @var string HTML title tag content
@@ -46,7 +51,7 @@ class Configuration
 	private static $debugMode = true;
 
 	/**
-	 * @var Security\IIdentity|null logged user identity
+	 * @var User user authentication
 	 */
 	private static $user;
 
@@ -56,9 +61,14 @@ class Configuration
 	private static $httpRequest;
 
 	/**
-	 * @var Http\IResponse HTTP|null response
+	 * @var Http\IResponse HTTP|null HTTP response
 	 */
 	private static $httpResponse;
+
+	/**
+	 * @var Http\Session|null session
+	 */
+	private static $session;
 
 	/**
 	 * @var array array of instances of services classes
@@ -75,6 +85,7 @@ class Configuration
 	{
 		self::setErrorReporting();
 		self::autoloadRegister();
+		self::setTimeZone();
 		self::setHtmlHeaders();
 
 		Database::initialize(
@@ -145,34 +156,24 @@ class Configuration
 
 
 	/**
-	 * Returns logged user identity or null if user is not logged in.
+	 * Returns user authentication object.
 	 *
-	 * @return Security\IIdentity|null user identity
+	 * @return User user authentication object
 	 */
-	public static function getLoggedUser(): ?Security\IIdentity
+	public static function getUser(): User
 	{
-		// TODO: get user fom session
+		if (!self::$user) {
+			self::$user = new User(self::getSession());
+		}
+
 		return self::$user;
-	}
-
-
-	/**
-	 * Sets logged user identity.
-	 *
-	 * @param Security\IIdentity|null $user user identity
-	 * @return void
-	 */
-	public static function setLoggedUser(?Security\IIdentity $user): void
-	{
-		self::$user = $user;
-		// TODO: store to session or cookie
 	}
 
 
 	/**
 	 * Returns HTTP request.
 	 *
-	 * @return Http\IRequest
+	 * @return Http\IRequest HTTP request
 	 */
 	public static function getHttpRequest(): Http\IRequest
 	{
@@ -185,9 +186,9 @@ class Configuration
 
 
 	/**
-	 * Returns HTTP request.
+	 * Returns HTTP response.
 	 *
-	 * @return Http\IResponse
+	 * @return Http\IResponse HTTP response
 	 */
 	public static function getHttpResponse(): Http\IResponse
 	{
@@ -196,6 +197,21 @@ class Configuration
 		}
 
 		return self::$httpResponse;
+	}
+
+
+	/**
+	 * Returns session object instance.
+	 *
+	 * @return Http\Session session object instance
+	 */
+	public static function getSession(): Http\Session
+	{
+		if (!self::$session) {
+			self::$session = new Http\Session(self::getHttpRequest(), self::getHttpResponse());
+		}
+
+		return self::$session;
 	}
 
 
@@ -270,6 +286,18 @@ class Configuration
 
 			include __DIR__ . "/$class.php";
 		});
+	}
+
+
+	/**
+	 * Sets time zone.
+	 *
+	 * @return void
+	 */
+	private static function setTimeZone(): void
+	{
+		date_default_timezone_set(self::TIME_ZONE);
+		@ini_set('date.timezone', self::TIME_ZONE);
 	}
 
 

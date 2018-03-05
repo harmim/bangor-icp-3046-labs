@@ -15,10 +15,10 @@ require_once __DIR__ . '/includes/configuration.php';
 
 
 Configuration::setTitleSection('Orders');
-$user = Configuration::getLoggedUser();
+$user = Configuration::getUser();
 
 // redirect user to login page if he is logged out
-if (!$user) {
+if (!$user->isLoggedIn()) {
 	Configuration::redirect('login.php');
 }
 

@@ -10,20 +10,68 @@ declare(strict_types=1);
 
 use Main\Configuration;
 use Main\Renderable;
+use Main\Security\Identity;
+use Main\Service;
 
 
 require_once __DIR__ . '/includes/configuration.php';
 
 
 Configuration::setTitleSection('Personal information');
-$user = Configuration::getLoggedUser();
+$user = Configuration::getUser();
+$identity = $user->getIdentity();
 
 // redirect user to login page if he is logged out
-if (!$user) {
+if (!$user->isLoggedIn()) {
 	Configuration::redirect('login.php');
 }
 
-// TODO: Fill, process and validate personal information form.
+$form = Configuration::getHttpRequest()->getPost();
+if (isset($form['submit'])) {
+	if (
+		!empty($form['forename'])
+		&& !empty($form['surname'])
+		&& (
+			(empty($form['password']) && empty($form['confirmPassword']))
+			|| (!empty($form['password']) && !empty($form['confirmPassword']))
+		)
+	) {
+		/** @var Service\UserService $userService */
+		$userService = Configuration::getService(Service\UserService::class);
+		try {
+			$data = [
+				'forename' => $form['forename'],
+				'surname' => $form['surname'],
+			];
+			if (!empty($form['password'])) {
+				$data += [
+					'password' => $form['password'],
+					'confirmPassword' => $form['confirmPassword'],
+				];
+			}
+			$userService->updateUser($identity->getId(), $data);
+
+			Renderable\Messages::addMessage(
+				'Personal information have been successfully updated.',
+				Renderable\Messages::TYPE_SUCCESS
+			);
+
+			// update identity
+			$updatedUser = $userService->getUserById($identity->getId());
+			$identity = new Identity($updatedUser['id'], $updatedUser);
+			$user->setIdentity($identity);
+
+		} catch (UnexpectedValueException $e) {
+			Renderable\Messages::addMessage($e->getMessage(), Renderable\Messages::TYPE_DANGER);
+		}
+
+	} else {
+		Renderable\Messages::addMessage(
+			'Please enter all required fields.',
+			Renderable\Messages::TYPE_DANGER
+		);
+	}
+}
 
 siteHeader();
 
@@ -35,16 +83,17 @@ siteHeader();
 
 		<?php
 
+		$userData = $identity->getData();
 		$personalInformationForm = new Renderable\PersonalInformationForm('personalInformation.php', [
 			'email' => [
-				'value' => 'harmim6@gmail.com',
+				'value' => $userData['email'],
 				'disabled' => true,
 			],
 			'forename' => [
-				'value' => 'Dominik',
+				'value' => $userData['forename'],
 			],
 			'surname' => [
-				'value' => 'Harmim',
+				'value' => $userData['surname'],
 			],
 			'submit' => [
 				'value' => 'Save',

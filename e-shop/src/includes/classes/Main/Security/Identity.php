@@ -10,7 +10,7 @@ namespace Main\Security;
 
 
 /**
- * Default implementation of IIdentity with array data.
+ * Default implementation of IIdentity.
  *
  * @package Main\Security
  */

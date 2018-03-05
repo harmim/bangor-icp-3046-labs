@@ -54,19 +54,19 @@ class PersonalInformationForm implements IRenderable
 						<input type="email" class="form-control" id="email" name="email" value="%s" placeholder="Enter email" required %s>
 					</div>
 				</div>
-	
+
 				<div class="form-row">
 					<div class="col-md-6 form-group">
 						<label for="forename">Forename</label>
 						<input type="text" class="form-control" id="forename" name="forename" value="%s" placeholder="Enter forename" required>
 					</div>
-	
+
 					<div class="col-md-6 form-group">
 						<label for="surname">Surname</label>
 						<input type="text" class="form-control" id="surname" name="surname" value="%s" placeholder="Enter surname" required>
 					</div>
 				</div>
-	
+
 				<div class="form-row">
 					<div class="col-md-6 form-group">
 						<label for="password">Password</label>
@@ -75,18 +75,18 @@ class PersonalInformationForm implements IRenderable
 							Your password must be at least 8 characters long, contain letters and numbers.
 						</small>
 					</div>
-	
+
 					<div class="col-md-6 form-group">
 						<label for="confirmPassword">Confirm password</label>
 						<input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Enter password again" %s>
 					</div>
 				</div>
-	
+
 				<hr class="mb-4">
-	
+
 				<button class="btn btn-primary btn-lg btn-block" type="submit" value="1" name="submit">%s</button>
 			</form>
-			
+
 			',
 			$this->action,
 			isset($this->options['email']['value']) ? escape($this->options['email']['value']) : '',

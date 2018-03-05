@@ -8,6 +8,9 @@ declare(strict_types=1);
 
 namespace Main\Renderable;
 
+use Main\Configuration;
+use Main\Http;
+
 
 /**
  * Messages renderable component.
@@ -38,9 +41,9 @@ class Messages implements IRenderableStatic
 
 
 	/**
-	 * @var array messages to be render
+	 * @var Http\SessionSection|null messages session section
 	 */
-	private static $messages = [];
+	private static $messagesSection;
 
 
 	/**
@@ -48,7 +51,7 @@ class Messages implements IRenderableStatic
 	 */
 	public static function render(): void
 	{
-		foreach (self::$messages as $type => $messages) {
+		foreach (self::getMessagesSection() as $type => $messages) {
 			foreach ($messages as $message) {
 				$html = '
 					<div class="alert alert-%s alert-dismissable">
@@ -77,8 +80,7 @@ class Messages implements IRenderableStatic
 			trigger_error(sprintf('Unknown message type %s.', $type), E_USER_WARNING);
 		}
 
-		// TODO: add message to session
-		self::$messages[$type][] = $message;
+		self::getMessagesSection()[$type][] = $message;
 	}
 
 
@@ -89,7 +91,21 @@ class Messages implements IRenderableStatic
 	 */
 	public static function cleanMessages(): void
 	{
-		// TODO: remove messages from session
-		self::$messages = [];
+		self::getMessagesSection()->remove();
+	}
+
+
+	/**
+	 * Returns messages session section.
+	 *
+	 * @return Http\SessionSection messages session section
+	 */
+	private static function getMessagesSection(): Http\SessionSection
+	{
+		if (!self::$messagesSection) {
+			self::$messagesSection = Configuration::getSession()->getSection('messages');
+		}
+
+		return self::$messagesSection;
 	}
 }

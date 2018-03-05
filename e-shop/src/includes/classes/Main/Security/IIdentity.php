@@ -27,7 +27,7 @@ interface IIdentity
 	/**
 	 * Return user data.
 	 *
-	 * @return iterable user data
+	 * @return array user data
 	 */
-	function getData(): iterable;
+	function getData(): array;
 }

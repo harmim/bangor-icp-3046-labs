@@ -47,6 +47,9 @@ class Request implements IRequest
 	private $scriptName;
 
 
+	/**
+	 * Creates HTTP request.
+	 */
 	public function __construct()
 	{
 		// GET, POST, COOKIE
