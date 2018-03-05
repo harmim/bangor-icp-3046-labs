@@ -21,7 +21,7 @@ $user = Configuration::getUser();
 
 // redirect user to personal information page if he is already logged in
 if ($user->isLoggedIn()) {
-	Configuration::redirect('personalInformation.php');
+	Configuration::redirect('personal_information.php');
 }
 
 // process and validate registration form

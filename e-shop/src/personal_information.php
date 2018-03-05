@@ -85,7 +85,7 @@ siteHeader();
 		<?php
 
 		$userData = $identity->getData();
-		$personalInformationForm = new Renderable\PersonalInformationForm('personalInformation.php', [
+		$personalInformationForm = new Renderable\PersonalInformationForm('personal_information.php', [
 			'email' => [
 				'value' => $userData['email'],
 				'disabled' => true,

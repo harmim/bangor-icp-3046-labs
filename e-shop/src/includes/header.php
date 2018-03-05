@@ -36,8 +36,8 @@ $isLoggedIn = Configuration::getUser()->isLoggedIn();
 			<?php endif; ?>
 
 			<?php if ($isLoggedIn): ?>
-				<li class="nav-item <?php if ($scriptName === 'personalInformation') echo 'active'; ?>">
-					<a class="nav-link" href="personalInformation.php">Personal information</a>
+				<li class="nav-item <?php if ($scriptName === 'personal_information') echo 'active'; ?>">
+					<a class="nav-link" href="personal_information.php">Personal information</a>
 				</li>
 			<?php endif; ?>
 
