@@ -31,7 +31,7 @@ interface IResponse
 	 * Sets HTTP response code.
 	 *
 	 * @param int $code HTTP code
-	 * @return IResponse
+	 * @return IResponse self
 	 */
 	function setCode(int $code): IResponse;
 
@@ -41,7 +41,7 @@ interface IResponse
 	 *
 	 * @param string $name name of HTTP header
 	 * @param string|null $value value of HTTP header
-	 * @return IResponse
+	 * @return IResponse self
 	 */
 	function setHeader(string $name, ?string $value): IResponse;
 
@@ -51,7 +51,7 @@ interface IResponse
 	 *
 	 * @param string $type type of content
 	 * @param string $charset character set
-	 * @return IResponse
+	 * @return IResponse self
 	 */
 	function setContentType(string $type, string $charset = 'utf-8'): IResponse;
 
@@ -69,7 +69,7 @@ interface IResponse
 	/**
 	 * Checks if headers have been sent.
 	 *
-	 * @return  bool true if headers have been sent, false otherwise
+	 * @return bool true if headers have been sent, false otherwise
 	 */
 	function isSent(): bool;
 
@@ -84,7 +84,7 @@ interface IResponse
 	 * @param string $domain cookie domain
 	 * @param bool $secure is cookie indicates that the cookie should only be transmitted over a secure HTTPS
 	 * @param bool $httpOnly when TRUE the cookie will be made accessible only through the HTTP protocol
-	 * @return IResponse
+	 * @return IResponse self
 	 */
 	function setCookie(
 		string $name,
@@ -104,7 +104,7 @@ interface IResponse
 	 * @param string $path cookie path
 	 * @param string $domain cookie domain
 	 * @param bool $secure is cookie indicates that the cookie should only be transmitted over a secure HTTPS
-	 * @return IResponse
+	 * @return IResponse self
 	 */
 	function deleteCookie(string $name, string $path = null, string $domain = null, bool $secure = null): IResponse;
 }

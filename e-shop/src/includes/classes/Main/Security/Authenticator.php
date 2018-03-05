@@ -25,7 +25,7 @@ class Authenticator implements IAuthenticator
 	 */
 	public function authenticate(string $username, string $password): IIdentity
 	{
-		$errorMessage = 'The credentials you entered are incorrect.';
+		static $errorMessage = 'The credentials you entered are incorrect.';
 		/** @var Service\UserService $userService */
 		$userService = Configuration::getService(Service\UserService::class);
 
@@ -37,7 +37,7 @@ class Authenticator implements IAuthenticator
 
 		} elseif (Passwords::needsRehash($user['password'])) {
 			$userService->updateUser($user['id'], [
-				'password' => Passwords::hash($password),
+				'password' => $password,
 			]);
 		}
 

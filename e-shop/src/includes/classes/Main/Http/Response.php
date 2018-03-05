@@ -34,6 +34,9 @@ class Response implements IResponse
 	private $code = self::C200_OK;
 
 
+	/**
+	 * Creates HTTP response.
+	 */
 	public function __construct()
 	{
 		if (is_int($code = http_response_code())) {
@@ -50,7 +53,7 @@ class Response implements IResponse
 	public function setCode(int $code): IResponse
 	{
 		if ($code < 100 || $code > 599) {
-			throw new \InvalidArgumentException("Bad HTTP response '$code'.");
+			throw new \InvalidArgumentException("Bad HTTP response code '$code'.");
 		}
 
 		self::checkHeaders();
@@ -84,7 +87,7 @@ class Response implements IResponse
 	 */
 	public function setContentType(string $type, string $charset = 'utf-8'): IResponse
 	{
-		$this->setHeader('Content-Type', $type . ($charset ? '; charset=' . $charset : ''));
+		$this->setHeader('Content-Type', $type . ($charset ? "; charset=$charset" : ''));
 
 		return $this;
 	}

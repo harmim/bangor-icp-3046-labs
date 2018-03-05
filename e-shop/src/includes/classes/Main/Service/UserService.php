@@ -110,7 +110,6 @@ class UserService
 			'confirmPassword' => $confirmPassword,
 		];
 		$this->checkUserData($data);
-		unset($data['confirmPassword']);
 		Database::insert('user', $data);
 
 		return $this;

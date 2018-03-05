@@ -45,7 +45,7 @@ class SessionSection implements \IteratorAggregate, \ArrayAccess, \Countable
 
 
 	/**
-	 * Creates new session section.
+	 * Creates session section.
 	 * Do not call directly. Use Session::getSection().
 	 *
 	 * @param Session $session session instance

@@ -125,7 +125,7 @@ class Database
 	 */
 	public static function insert(string $table, array $data): int
 	{
-		if ( ! self::connect()) {
+		if (!self::connect()) {
 			return 0;
 		}
 

@@ -25,14 +25,14 @@ class User
 	private $session;
 
 	/**
-	 * @var Http\SessionSection|null user session section
-	 */
-	private $userSection;
-
-	/**
 	 * @var Security\IAuthenticator authenticator instance
 	 */
 	private $authenticator;
+
+	/**
+	 * @var Http\SessionSection|null user session section
+	 */
+	private $userSection;
 
 
 	/**
@@ -152,6 +152,8 @@ class User
 	 *
 	 * @param bool $state authenticated status of user
 	 * @return User self
+	 *
+	 * @throws \RuntimeException if HTTP headers have been sent
 	 */
 	private function setAuthenticated(bool $state): User
 	{
@@ -199,6 +201,6 @@ class User
 			unset($section->expireDelta);
 		}
 
-		return $this->userSection;
+		return $section;
 	}
 }

@@ -48,7 +48,7 @@ class Session
 		'cookie_httponly' => true, // must be enabled to prevent Session Hijacking
 
 		// other
-		'gc_maxlifetime' => self::LIFETIME
+		'gc_maxlifetime' => self::LIFETIME,
 	];
 
 
@@ -73,6 +73,12 @@ class Session
 	private $httpResponse;
 
 
+	/**
+	 * Creates session.
+	 *
+	 * @param IRequest $httpRequest HTTP request
+	 * @param IResponse $httpResponse HTTP response
+	 */
 	public function __construct(IRequest $httpRequest, IResponse $httpResponse)
 	{
 		$this->httpRequest = $httpRequest;
@@ -218,8 +224,9 @@ class Session
 	 * Cleans and minimizes meta structures.
 	 * This method is called automatically on shutdown, do not call it directly.
 	 *
-	 * @internal
 	 * @return void
+	 *
+	 * @internal
 	 */
 	public function clean(): void
 	{

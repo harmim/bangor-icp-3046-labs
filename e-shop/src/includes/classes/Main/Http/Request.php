@@ -65,7 +65,7 @@ class Request implements IRequest
 
 		// remove invalid characters
 		$list = [&$this->queryParameters, &$this->post, &$this->cookies];
-		$chars = '\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}';
+		static $chars = '\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}';
 		$reChars = '~^[' . $chars . ']*+\z~u';
 		foreach ($list as $key => &$val) {
 			foreach ($val as $k => $v) {
@@ -184,5 +184,4 @@ class Request implements IRequest
 
 		return $scriptName;
 	}
-
 }

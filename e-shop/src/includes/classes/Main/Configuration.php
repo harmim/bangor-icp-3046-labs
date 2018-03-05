@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Main;
 
 use Main\Http;
-use Main\Security;
 use Main\Service;
 
 
@@ -23,7 +22,7 @@ class Configuration
 	/**
 	 * default HTML title tag content
 	 */
-	public const DEFAULT_HTML_TITLE = 'Inside';
+	private const DEFAULT_HTML_TITLE = 'Inside';
 
 	/**
 	 * database details
@@ -51,7 +50,7 @@ class Configuration
 	private static $debugMode = true;
 
 	/**
-	 * @var User user authentication
+	 * @var User|null user authentication
 	 */
 	private static $user;
 
@@ -61,7 +60,7 @@ class Configuration
 	private static $httpRequest;
 
 	/**
-	 * @var Http\IResponse HTTP|null HTTP response
+	 * @var Http\IResponse|null HTTP response
 	 */
 	private static $httpResponse;
 
@@ -121,7 +120,7 @@ class Configuration
 
 
 	/**
-	 * Sets HTML title tag section to default title.
+	 * Append HTML title tag section to default title.
 	 *
 	 * @param string $section title section
 	 * @return void
