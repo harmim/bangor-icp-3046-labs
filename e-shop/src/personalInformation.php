@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 use Main\Configuration;
 use Main\Renderable;
-use Main\Security\Identity;
+use Main\Security;
 use Main\Service;
 
 
@@ -26,6 +26,7 @@ if (!$user->isLoggedIn()) {
 	Configuration::redirect('login.php');
 }
 
+// process and validate personal information form
 $form = Configuration::getHttpRequest()->getPost();
 if (isset($form['submit'])) {
 	if (
@@ -58,7 +59,7 @@ if (isset($form['submit'])) {
 
 			// update identity
 			$updatedUser = $userService->getUserById($identity->getId());
-			$identity = new Identity($updatedUser['id'], $updatedUser);
+			$identity = new Security\Identity($updatedUser['id'], $updatedUser);
 			$user->setIdentity($identity);
 
 		} catch (UnexpectedValueException $e) {

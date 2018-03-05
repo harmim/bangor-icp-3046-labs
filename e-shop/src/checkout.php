@@ -18,6 +18,7 @@ require_once __DIR__ . '/includes/configuration.php';
 Configuration::setTitleSection('Checkout process');
 
 // TODO: Redirect user away if his Basket is empty or if he can't checkout for any other reason.
+// TODO: Maybe login user if he is not logged in.
 // TODO: Fill, process and validate checkout form.
 
 siteHeader();
@@ -51,7 +52,7 @@ siteHeader();
 			</tr>
 
 			<tr>
-				<th scope="row"><small><a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a></th>
+				<th scope="row"><small><a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a></small></th>
 				<td class="text-right"><small>3</small></td>
 				<td class="text-danger text-right"><small>£&nbsp;419.91</small></td>
 			</tr>
@@ -71,7 +72,7 @@ siteHeader();
 
 			<div class="mb-3">
 				<label for="email">Email</label>
-				<input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+				<input type="email" class="form-control" id="email" name="email" value="harmim6@gmail.com" placeholder="Enter email" required disabled>
 			</div>
 
 			<?php
@@ -91,8 +92,8 @@ siteHeader();
 			<hr class="mb-4">
 
 			<div class="custom-control custom-checkbox mb-3">
-				<input type="checkbox" class="custom-control-input" id="shippingAddress" name="shippingAddress" data-toggle="collapse" data-target="#shippingAddressCollapse" aria-expanded="false" aria-controls="shippingAddressCollapse">
-				<label class="custom-control-label" for="shippingAddress">Shipping address differs from my billing address</label>
+				<input type="checkbox" class="custom-control-input" id="shippingAddressEnabled" name="shippingAddressEnabled" data-toggle="collapse" data-target="#shippingAddressCollapse" aria-expanded="false" aria-controls="shippingAddressCollapse">
+				<label class="custom-control-label" for="shippingAddressEnabled">Shipping address differs from my billing address</label>
 			</div>
 
 			<div class="collapse" id="shippingAddressCollapse">
@@ -100,14 +101,7 @@ siteHeader();
 
 				<?php
 
-				$billingAddressForm = new Renderable\AddressForm('shipping', [
-					'forename' => [
-						'value' => 'Dominik',
-					],
-					'surname' => [
-						'value' => 'Harmim'
-					],
-				]);
+				$billingAddressForm = new Renderable\AddressForm('shipping');
 				$billingAddressForm->render();
 
 				?>

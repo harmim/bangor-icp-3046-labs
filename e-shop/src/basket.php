@@ -42,7 +42,7 @@ siteHeader();
 			<!-- TODO: Display products in Basket from database. -->
 			<tr>
 				<th scope="row">
-					<h6 class="my-0"><a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a></h6>
+					<a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a>
 				</th>
 
 				<td class="text-center">
@@ -77,7 +77,7 @@ siteHeader();
 
 			<tr>
 				<th scope="row">
-					<h6 class="my-0"><a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a></h6>
+					<a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a>
 				</th>
 
 				<td class="text-center">
@@ -112,7 +112,7 @@ siteHeader();
 
 			<tr>
 				<th scope="row">
-					<h6 class="my-0"><a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a></h6>
+					<a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a>
 				</th>
 
 				<td class="text-center">
@@ -145,7 +145,7 @@ siteHeader();
 
 			<tr>
 				<th scope="row" colspan="2">
-					<h6 class="my-0"><strong>Total</strong></h6>
+					<strong>Total</strong>
 				</th>
 
 				<td class="text-right">

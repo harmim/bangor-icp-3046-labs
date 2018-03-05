@@ -22,5 +22,5 @@ use Main\Renderable;
 		<?php require __DIR__ . '/header.php'; ?>
 	</header>
 
-	<main role="main" class="container">
+	<main class="container">
 		<?php Renderable\Messages::render(); ?>

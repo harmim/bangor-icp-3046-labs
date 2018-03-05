@@ -14,6 +14,7 @@ use Main\Renderable;
 
 require_once __DIR__ . '/includes/configuration.php';
 
+
 $user = Configuration::getUser();
 
 // if user is logged out, redirect to login page

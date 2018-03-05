@@ -24,9 +24,9 @@ if ($user->isLoggedIn()) {
 	Configuration::redirect('personalInformation.php');
 }
 
+// process and validate registration form
 $form = Configuration::getHttpRequest()->getPost();
 if (isset($form['submit'])) {
-	// validation
 	if (
 		!empty ($form['email'])
 		&& !empty ($form['forename'])

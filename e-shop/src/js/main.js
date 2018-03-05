@@ -169,7 +169,7 @@ dhMain.formValidation = {
 	 * Custom validation functions registration.
 	 */
 	customValidators: function () {
-		$.validator.addMethod("containLetterAndNumbers", function (value, element) {
+		$.validator.addMethod("containLettersAndNumbers", function (value, element) {
 			return this.optional(element)
 				|| (
 					(new RegExp(".*\\d.*")).test(value)
@@ -194,7 +194,7 @@ dhMain.formValidation = {
 		$("form#registration").validate({
 			rules: {
 				password: {
-					containLetterAndNumbers: true
+					containLettersAndNumbers: true
 				},
 				confirmPassword: {
 					equalTo: "#password"
