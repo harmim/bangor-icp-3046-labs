@@ -103,26 +103,28 @@ class Request implements IRequest
 	/**
 	 * @inheritdoc
 	 */
-	public function getQuery(string $key = null)
+	public function getQuery(string $key = null, bool $trim = true)
 	{
+		$queryParameters = $trim ? $this->trimArray($this->queryParameters) : $this->queryParameters;
 		if ($key === null) {
-			return $this->queryParameters;
+			return $queryParameters;
 		}
 
-		return $this->queryParameters[$key] ?? null;
+		return $queryParameters[$key] ?? null;
 	}
 
 
 	/**
 	 * @inheritdoc
 	 */
-	public function getPost(string $key = null)
+	public function getPost(string $key = null, bool $trim = true)
 	{
+		$post = $trim ? $this->trimArray($this->post) : $this->post;
 		if ($key === null) {
-			return $this->post;
+			return $post;
 		}
 
-		return $this->post[$key] ?? null;
+		return $post[$key] ?? null;
 	}
 
 
@@ -183,5 +185,21 @@ class Request implements IRequest
 		}
 
 		return $scriptName;
+	}
+
+
+	/**
+	 * Trimmes given array.
+	 *
+	 * @param array $array array to be trimmed
+	 * @return array trimmed array
+	 */
+	private function trimArray(array $array): array
+	{
+		array_walk_recursive($array, function (&$item) {
+			$item = trim($item);
+		});
+
+		return $array;
 	}
 }

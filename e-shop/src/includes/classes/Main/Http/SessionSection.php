@@ -274,6 +274,8 @@ class SessionSection implements \IteratorAggregate, \ArrayAccess, \Countable
 
 	/**
 	 * Starts session and initialize instance variables.
+	 *
+	 * @return void
 	 */
 	private function start(): void
 	{

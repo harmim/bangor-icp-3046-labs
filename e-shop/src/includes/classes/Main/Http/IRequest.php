@@ -29,9 +29,10 @@ interface IRequest
 	 * If no key is passed, returns the entire array.
 	 *
 	 * @param string $key key of $_GET variable
+	 * @param bool $trim trim $_POST fields
 	 * @return mixed $_GET variable
 	 */
-	function getQuery(string $key = null);
+	function getQuery(string $key = null, bool $trim = true);
 
 
 	/**
@@ -39,9 +40,10 @@ interface IRequest
 	 * If no key is passed, returns the entire array.
 	 *
 	 * @param string $key key of $_POST variable
+	 * @param bool $trim trim $_POST fields
 	 * @return mixed $_POST variable
 	 */
-	function getPost(string $key = null);
+	function getPost(string $key = null, bool $trim = true);
 
 
 	/**
