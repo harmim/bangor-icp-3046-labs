@@ -91,7 +91,7 @@ class User
 	{
 		$section = $this->getUserSection(false);
 
-		return $section && isset($section->authenticated) && $section->authenticated;
+		return $section && $section->authenticated;
 	}
 
 
@@ -104,7 +104,7 @@ class User
 	{
 		$section = $this->getUserSection(false);
 
-		return $section && isset($section->identity) && $section->identity instanceof Security\IIdentity
+		return $section && $section->identity instanceof Security\IIdentity
 			? $section->identity
 			: null;
 	}
@@ -184,17 +184,13 @@ class User
 
 		$this->userSection = $section = $this->session->getSection('user');
 
-		if (
-			!isset($section->identity)
-			|| !($section->identity instanceof Security\IIdentity)
-			|| !is_bool($section->authenticated)
-		) {
+		if (!$section->identity instanceof Security\IIdentity || !is_bool($section->authenticated)) {
 			$section->remove();
 		}
 
-		if (isset($section->authenticated) && $section->authenticated) {
-			if (isset($section->expireDelta) && $section->expireDelta > 0) {
-				$this->setExpiration(time() + $section->expireDelta);
+		if ($section->authenticated) {
+			if ($section->expireDelta > 0) {
+				$section->setExpiration(time() + $section->expireDelta);
 			}
 
 		} else {

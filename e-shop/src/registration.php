@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 use Main\Configuration;
 use Main\Renderable;
-use Main\Service;
 
 
 require_once __DIR__ . '/includes/configuration.php';
@@ -24,45 +23,44 @@ if ($user->isLoggedIn()) {
 	Configuration::redirect('personal_information.php');
 }
 
+$messages = Configuration::getMessages();
 // process and validate registration form
-$form = Configuration::getHttpRequest()->getPost();
-if (isset($form['submit'])) {
+$post = Configuration::getHttpRequest()->getPost();
+if (isset($post['submit'])) {
 	if (
-		!empty ($form['email'])
-		&& !empty ($form['forename'])
-		&& !empty ($form['surname'])
-		&& !empty ($form['password'])
-		&& !empty ($form['confirmPassword'])
+		!empty ($post['email'])
+		&& !empty ($post['forename'])
+		&& !empty ($post['surname'])
+		&& !empty ($post['password'])
+		&& !empty ($post['confirmPassword'])
 	) {
-		/** @var Service\UserService $userService */
-		$userService = Configuration::getService(Service\UserService::class);
 		try {
-			$userService->createUser(
-				$form['email'],
-				$form['forename'],
-				$form['surname'],
-				$form['password'],
-				$form['confirmPassword']
+			Configuration::getUserService()->createUser(
+				$post['email'],
+				$post['forename'],
+				$post['surname'],
+				$post['password'],
+				$post['confirmPassword']
 			);
 
-			$user->login($form['email'], $form['password']);
+			$user->login($post['email'], $post['password']);
 			$user->setExpiration('7 days');
-			Renderable\Messages::addMessage(
-				'You have been successfully registered and logged in.',
-				Renderable\Messages::TYPE_SUCCESS
-			);
+			$messages->addMessage('You have been successfully registered and logged in.', $messages::TYPE_SUCCESS);
 
-			Configuration::redirect('index.php');
+			if ($backLink = Configuration::getHttpRequest()->getCookie('loginBackLink')) {
+				Configuration::getHttpResponse()->deleteCookie('loginBackLink');
+				Configuration::redirect($backLink);
+
+			} else {
+				Configuration::redirect('index.php');
+			}
 
 		} catch (UnexpectedValueException $e) {
-			Renderable\Messages::addMessage($e->getMessage(), Renderable\Messages::TYPE_DANGER);
+			$messages->addMessage($e->getMessage(), $messages::TYPE_DANGER);
 		}
 
 	} else {
-		Renderable\Messages::addMessage(
-			'Please enter all required fields.',
-			Renderable\Messages::TYPE_DANGER
-		);
+		$messages->addMessage('Please enter all required fields.', $messages::TYPE_DANGER);
 	}
 }
 
@@ -77,11 +75,14 @@ siteHeader();
 		<?php
 
 		$registrationForm = new Renderable\PersonalInformationForm('registration.php', [
+			'email' => [
+				'value' => $post['email'] ?? null,
+			],
 			'forename' => [
-				'value' => $form['forename'] ?? null,
+				'value' => $post['forename'] ?? null,
 			],
 			'surname' => [
-				'value' => $form['surname'] ?? null,
+				'value' => $post['surname'] ?? null,
 			],
 			'password' => [
 				'required' => true,

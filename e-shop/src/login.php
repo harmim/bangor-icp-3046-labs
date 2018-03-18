@@ -9,7 +9,6 @@
 declare(strict_types=1);
 
 use Main\Configuration;
-use Main\Renderable;
 use Main\Security;
 
 
@@ -18,34 +17,36 @@ require_once __DIR__ . '/includes/configuration.php';
 
 Configuration::setTitleSection('Login');
 $user = Configuration::getUser();
+$messages = Configuration::getMessages();
 
 // redirect user to personal information page if he is already logged in
 if ($user->isLoggedIn()) {
+	$messages->addMessage('You are already logged in.');
 	Configuration::redirect('personal_information.php');
 }
 
 // process and validate login form
-$form = Configuration::getHttpRequest()->getPost();
-if (isset($form['submit'])) {
-	if (!empty($form['email']) && !empty($form['password'])) {
+$post = Configuration::getHttpRequest()->getPost();
+if (isset($post['submit'])) {
+	if (!empty($post['email']) && !empty($post['password'])) {
 		try {
-			$user->login($form['email'], $form['password']);
+			$user->login($post['email'], $post['password']);
 			$user->setExpiration('7 days');
-			Renderable\Messages::addMessage(
-				'You have been successfully logged in.',
-				Renderable\Messages::TYPE_SUCCESS
-			);
+			$messages->addMessage('You have been successfully logged in.', $messages::TYPE_SUCCESS);
 
-			Configuration::redirect('index.php');
+			if ($backLink = Configuration::getHttpRequest()->getCookie('loginBackLink')) {
+				Configuration::getHttpResponse()->deleteCookie('loginBackLink');
+				Configuration::redirect($backLink);
+
+			} else {
+				Configuration::redirect('index.php');
+			}
 
 		} catch (Security\AuthenticationException $e) {
-			Renderable\Messages::addMessage($e->getMessage(), Renderable\Messages::TYPE_DANGER);
+			$messages->addMessage($e->getMessage(), $messages::TYPE_DANGER);
 		}
 	} else {
-		Renderable\Messages::addMessage(
-			'Please enter all required fields.',
-			Renderable\Messages::TYPE_DANGER
-		);
+		$messages->addMessage('Please enter all required fields.', $messages::TYPE_DANGER);
 	}
 }
 
@@ -57,7 +58,7 @@ siteHeader();
 	<div class="col-md-8">
 		<h4 class="mb-3">Login</h4>
 
-		<form class="needs-validation" method="post" action="login.php">
+		<form class="needs-validation mb-3" method="post" action="login.php">
 			<div class="form-row">
 				<div class="col-md-6 form-group">
 					<label for="email">Email</label>
@@ -74,6 +75,10 @@ siteHeader();
 
 			<button class="btn btn-primary btn-lg btn-block" type="submit" value="1" name="submit">Login</button>
 		</form>
+
+		<p>
+			New customer? <a href="registration.php">Create your account</a>
+		</p>
 	</div>
 </div>
 

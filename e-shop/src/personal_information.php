@@ -11,7 +11,6 @@ declare(strict_types=1);
 use Main\Configuration;
 use Main\Renderable;
 use Main\Security;
-use Main\Service;
 
 
 require_once __DIR__ . '/includes/configuration.php';
@@ -19,43 +18,41 @@ require_once __DIR__ . '/includes/configuration.php';
 
 Configuration::setTitleSection('Personal information');
 $user = Configuration::getUser();
-$identity = $user->getIdentity();
+$messages = Configuration::getMessages();
 
 // redirect user to login page if he is logged out
 if (!$user->isLoggedIn()) {
+	$messages->addMessage('You have to be logged in if you want to display your personal information.');
+	Configuration::getHttpResponse()->setCookie('loginBackLink', 'personal_information.php', '10 minutes');
 	Configuration::redirect('login.php');
 }
 
+$identity = $user->getIdentity();
 // process and validate personal information form
-$form = Configuration::getHttpRequest()->getPost();
-if (isset($form['submit'])) {
+$post = Configuration::getHttpRequest()->getPost();
+if (isset($post['submit'])) {
 	if (
-		!empty($form['forename'])
-		&& !empty($form['surname'])
+		!empty($post['forename'])
+		&& !empty($post['surname'])
 		&& (
-			(empty($form['password']) && empty($form['confirmPassword']))
-			|| (!empty($form['password']) && !empty($form['confirmPassword']))
+			(empty($post['password']) && empty($post['confirmPassword']))
+			|| (!empty($post['password']) && !empty($post['confirmPassword']))
 		)
 	) {
-		/** @var Service\UserService $userService */
-		$userService = Configuration::getService(Service\UserService::class);
+		$userService = Configuration::getUserService();
 		try {
 			$data = [
-				'forename' => $form['forename'],
-				'surname' => $form['surname'],
+				'forename' => $post['forename'],
+				'surname' => $post['surname'],
 			];
-			if (!empty($form['password'])) {
+			if (!empty($post['password'])) {
 				$data += [
-					'password' => $form['password'],
-					'confirmPassword' => $form['confirmPassword'],
+					'password' => $post['password'],
+					'confirmPassword' => $post['confirmPassword'],
 				];
 			}
 			$userService->updateUser($identity->getId(), $data);
-
-			Renderable\Messages::addMessage(
-				'Personal information have been successfully updated.',
-				Renderable\Messages::TYPE_SUCCESS
-			);
+			$messages->addMessage('Personal information have been successfully updated.', $messages::TYPE_SUCCESS);
 
 			// update identity
 			$updatedUser = $userService->getUserById($identity->getId());
@@ -63,14 +60,11 @@ if (isset($form['submit'])) {
 			$user->setIdentity($identity);
 
 		} catch (UnexpectedValueException $e) {
-			Renderable\Messages::addMessage($e->getMessage(), Renderable\Messages::TYPE_DANGER);
+			$messages->addMessage($e->getMessage(), $messages::TYPE_DANGER);
 		}
 
 	} else {
-		Renderable\Messages::addMessage(
-			'Please enter all required fields.',
-			Renderable\Messages::TYPE_DANGER
-		);
+		$messages->addMessage('Please enter all required fields.', $messages::TYPE_DANGER);
 	}
 }
 

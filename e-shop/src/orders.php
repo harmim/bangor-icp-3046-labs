@@ -19,6 +19,8 @@ $user = Configuration::getUser();
 
 // redirect user to login page if he is logged out
 if (!$user->isLoggedIn()) {
+	Configuration::getMessages()->addMessage('You have to be logged in if you want display your orders list.');
+	Configuration::getHttpResponse()->setCookie('loginBackLink', 'orders.php', '10 minutes');
 	Configuration::redirect('login.php');
 }
 

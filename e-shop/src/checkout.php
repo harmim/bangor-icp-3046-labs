@@ -9,17 +9,35 @@
 declare(strict_types=1);
 
 use Main\Configuration;
+use Main\Http;
 use Main\Renderable;
+use Main\Utils;
 
 
 require_once __DIR__ . '/includes/configuration.php';
 
 
 Configuration::setTitleSection('Checkout process');
+$basketService = Configuration::getBasketService();
+$user = Configuration::getUser();
+$messages = Configuration::getMessages();
 
-// TODO: Redirect user away if his Basket is empty or if he can't checkout for any other reason.
-// TODO: Maybe login user if he is not logged in.
+// redirect user to login page if he is not logged in
+if (!$user->isLoggedIn()) {
+	$messages->addMessage('You have to be logged in to checkout your order.');
+	Configuration::getHttpResponse()->setCookie('loginBackLink', 'checkout.php', '10 minutes');
+	Configuration::redirect('login.php');
+}
+
+// redirect user away if his Basket is empty
+$basketProductsCount = $basketService->getBasketProductsCount();
+if (!$basketProductsCount) {
+	Configuration::redirect('basket.php');
+}
+
 // TODO: Fill, process and validate checkout form.
+$identity = $user->getIdentity();
+$userData = $identity->getData();
 
 siteHeader();
 
@@ -30,8 +48,7 @@ siteHeader();
 <div class="row">
 	<div class="col-md-4 order-md-2 mb-4">
 		<h4 class="d-flex justify-content-between align-items-center mb-3">
-			<!-- TODO: Display number of products in Basket from database. -->
-			<span class="text-muted">Your Basket</span> <span class="badge badge-secondary badge-pill">3</span>
+			<span class="text-muted">Your Basket</span> <span class="badge badge-secondary badge-pill"><?= $basketProductsCount; ?></span>
 		</h4>
 
 		<table class="table">
@@ -44,22 +61,25 @@ siteHeader();
 		</thead>
 
 		<tbody>
-			<!-- TODO: Display products in Basket from database. -->
-			<tr>
-				<th scope="row"><small><a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a></small></th>
-				<td class="text-right"><small>2</small></td>
-				<td class="text-danger text-right"><small>£&nbsp;139.97</small></td>
-			</tr>
+			<?php foreach ($basketService->getBasketProducts() as $productData): ?>
+				<?php
 
-			<tr>
-				<th scope="row"><small><a href="product.php">Samsung 850 EVO 500GB 2.5inch SSD</a></small></th>
-				<td class="text-right"><small>3</small></td>
-				<td class="text-danger text-right"><small>£&nbsp;419.91</small></td>
-			</tr>
+				$product = $productData['product'];
+				$quantity = (int) $productData['quantity'];
+				$productUrl = (new Http\Url('product.php'))->setQueryParameter('id', escape($product['id']));
+
+				?>
+
+				<tr>
+					<th scope="row"><small><a href="<?= $productUrl; ?>"><?= escape($product['name']); ?></a></small></th>
+					<td class="text-right"><small><?= $quantity; ?></small></td>
+					<td class="text-danger text-right"><small><?= Utils::formatPrice((float) $product['price'] * $quantity); ?></small></td>
+				</tr>
+			<?php endforeach; ?>
 
 			<tr>
 				<th scope="row" colspan="2"><small><strong>Total</strong></small></th>
-				<td class="text-danger text-right"><small><strong>£&nbsp;699.85</strong></small></td>
+				<td class="text-danger text-right"><small><strong><?= Utils::formatPrice($basketService->getBasketProductsPrice()); ?></strong></small></td>
 			</tr>
 		</tbody>
 	</table>
@@ -67,22 +87,21 @@ siteHeader();
 
 	<div class="col-md-8 order-md-1">
 		<form class="needs-validation" method="post" action="checkout.php">
-			<!-- TODO: Fill this form with user data. -->
 			<h4 class="mb-3">Billing address</h4>
 
 			<div class="mb-3">
 				<label for="email">Email</label>
-				<input type="email" class="form-control" id="email" name="email" value="harmim6@gmail.com" placeholder="Enter email" required disabled>
+				<input type="email" class="form-control" id="email" name="email" value="<?= $userData['email']; ?>" placeholder="Enter email" required disabled>
 			</div>
 
 			<?php
 
 			$billingAddressForm = new Renderable\AddressForm('billing', [
 				'forename' => [
-					'value' => 'Dominik',
+					'value' => $userData['forename'],
 				],
 				'surname' => [
-					'value' => 'Harmim'
+					'value' => $userData['surname'],
 				],
 			]);
 			$billingAddressForm->render();

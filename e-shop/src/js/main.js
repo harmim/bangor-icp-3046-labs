@@ -24,6 +24,8 @@ dhMain.plusMinusNumberInput = {
 			this.focusin($inputNumber);
 			this.change($inputNumber, $btnNumber);
 			this.keydown($inputNumber);
+
+			$inputNumber.trigger("change");
 		}
 	},
 

@@ -192,6 +192,8 @@ class SessionSection implements \IteratorAggregate, \ArrayAccess, \Countable
 	 */
 	public function count(): int
 	{
+		$this->start();
+
 		return count($this->data);
 	}
 

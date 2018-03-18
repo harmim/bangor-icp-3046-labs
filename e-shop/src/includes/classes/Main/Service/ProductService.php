@@ -19,6 +19,23 @@ use Main\Database;
 class ProductService
 {
 	/**
+	 * @var Database\IDatabase database wrapper
+	 */
+	private $database;
+
+
+	/**
+	 * Creates product service.
+	 *
+	 * @param Database\IDatabase $database database wrapper
+	 */
+	public function __construct(Database\IDatabase $database)
+	{
+		$this->database = $database;
+	}
+
+
+	/**
 	 * Finds product by id.
 	 *
 	 * @param int $id product id
@@ -32,7 +49,7 @@ class ProductService
 			WHERE `id` = :id
 		';
 
-		return Database::queryOne($query, [
+		return $this->database->queryOne($query, [
 			':id' => $id,
 		]);
 	}
@@ -50,7 +67,7 @@ class ProductService
 			FROM `product`
 		';
 
-		return Database::queryAll($query);
+		return $this->database->queryAll($query);
 	}
 
 

@@ -8,7 +8,9 @@ declare(strict_types=1);
 
 namespace Main;
 
+use Main\Database;
 use Main\Http;
+use Main\Renderable;
 use Main\Service;
 
 
@@ -50,6 +52,11 @@ class Configuration
 	private static $debugMode = true;
 
 	/**
+	 * @var Database\IDatabase|null database wrapper
+	 */
+	private static $database;
+
+	/**
 	 * @var User|null user authentication
 	 */
 	private static $user;
@@ -70,9 +77,24 @@ class Configuration
 	private static $session;
 
 	/**
-	 * @var array array of instances of services classes
+	 * @var Renderable\Messages|null Messages component
 	 */
-	private static $services = [];
+	private static $messages;
+
+	/**
+	 * @var Service\UserService|null user service
+	 */
+	private static $userService;
+
+	/**
+	 * @var Service\ProductService|null product service
+	 */
+	private static $productService;
+
+	/**
+	 * @var Service\BasketService|null basket service
+	 */
+	private static $basketService;
 
 
 	/**
@@ -87,12 +109,7 @@ class Configuration
 		self::setTimeZone();
 		self::setHtmlHeaders();
 
-		Database::initialize(
-			self::DATABASE_HOST,
-			self::DATABASE_NAME,
-			self::DATABASE_USER,
-			self::DATABASE_PASSWORD
-		);
+		self::getBasketService()->setExpiration('14 days');
 	}
 
 
@@ -151,6 +168,31 @@ class Configuration
 	public static function setDebugMode(bool $debugMode): void
 	{
 		self::$debugMode = $debugMode;
+	}
+
+
+	/**
+	 * Returns database wrapper.
+	 *
+	 * @return Database\IDatabase database wrapper
+	 */
+	public static function getDatabase(): Database\IDatabase
+	{
+		if (!self::$database) {
+			try {
+				self::$database = new Database\MySqlDatabase(
+					self::DATABASE_HOST,
+					self::DATABASE_NAME,
+					self::DATABASE_USER,
+					self::DATABASE_PASSWORD
+				);
+			} catch (\PDOException $e) {
+				self::getMessages()->addMessage('Database error.', Renderable\Messages::TYPE_DANGER);
+				self::$database = new Database\DummyDatabase();
+			}
+		}
+
+		return self::$database;
 	}
 
 
@@ -215,24 +257,65 @@ class Configuration
 
 
 	/**
-	 * Returns instance of service of given class.
+	 * Returns Messages component.
 	 *
-	 * @param string $class class name of service
-	 * @return Service\ProductService|Service\UserService|null|object
+	 * @return Renderable\Messages Messages component
 	 */
-	public static function getService(string $class)
+	public static function getMessages(): Renderable\Messages
 	{
-		if (isset(self::$services[$class])) {
-			return self::$services[$class];
+		if (!self::$messages) {
+			self::$messages = new Renderable\Messages(self::getSession()->getSection('messages'));
 		}
 
-		if (!class_exists($class)) {
-			$instance = null;
-		} else {
-			$instance = new $class();
+		return self::$messages;
+	}
+
+
+	/**
+	 * Returns user service.
+	 *
+	 * @return Service\UserService user service
+	 */
+	public static function getUserService(): Service\UserService
+	{
+		if (!self::$userService) {
+			self::$userService = new Service\UserService(self::getDatabase());
 		}
 
-		return self::$services[$class] = $instance;
+		return self::$userService;
+	}
+
+
+	/**
+	 * Returns product service.
+	 *
+	 * @return Service\ProductService product service
+	 */
+	public static function getProductService(): Service\ProductService
+	{
+		if (!self::$productService) {
+			self::$productService = new Service\ProductService(self::getDatabase());
+		}
+
+		return self::$productService;
+	}
+
+
+	/**
+	 * Returns basket service.
+	 *
+	 * @return Service\BasketService basket service
+	 */
+	public static function getBasketService(): Service\BasketService
+	{
+		if (!self::$basketService) {
+			self::$basketService = new Service\BasketService(
+				self::getSession()->getSection('basket'),
+				self::getProductService()
+			);
+		}
+
+		return self::$basketService;
 	}
 
 

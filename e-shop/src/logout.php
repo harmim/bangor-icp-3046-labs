@@ -9,7 +9,6 @@
 declare(strict_types=1);
 
 use Main\Configuration;
-use Main\Renderable;
 
 
 require_once __DIR__ . '/includes/configuration.php';
@@ -24,5 +23,5 @@ if (!$user->isLoggedIn()) {
 
 // logout and redirect user
 $user->logout();
-Renderable\Messages::addMessage('You have been successfully logged out.');
+Configuration::getMessages()->addMessage('You have been successfully logged out.');
 Configuration::redirect('index.php');

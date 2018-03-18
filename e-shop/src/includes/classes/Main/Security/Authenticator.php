@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Main\Security;
 
 use Main\Configuration;
-use Main\Service;
 
 
 /**
@@ -26,8 +25,7 @@ class Authenticator implements IAuthenticator
 	public function authenticate(string $username, string $password): IIdentity
 	{
 		static $errorMessage = 'The credentials you entered are incorrect.';
-		/** @var Service\UserService $userService */
-		$userService = Configuration::getService(Service\UserService::class);
+		$userService = Configuration::getUserService();
 
 		if (!($user = $userService->getUserByEmail($username))) {
 			throw new AuthenticationException($errorMessage, self::IDENTITY_NOT_FOUND);
@@ -40,6 +38,8 @@ class Authenticator implements IAuthenticator
 				'password' => $password,
 			]);
 		}
+
+		unset($user['password']); // return user without password due to security reasons
 
 		return new Identity($user['id'], $user);
 	}

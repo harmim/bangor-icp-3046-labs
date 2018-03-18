@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Main\Renderable;
 
-use Main\Configuration;
 use Main\Http;
 
 
@@ -18,7 +17,7 @@ use Main\Http;
  *
  * @package Main\Renderable
  */
-class Messages implements IRenderableStatic
+class Messages implements IRenderable
 {
 	/**
 	 * message types
@@ -41,17 +40,28 @@ class Messages implements IRenderableStatic
 
 
 	/**
-	 * @var Http\SessionSection|null messages session section
+	 * @var Http\SessionSection messages session section
 	 */
-	private static $messagesSection;
+	private $messagesSection;
+
+
+	/**
+	 * Creates Messages component.
+	 *
+	 * @param Http\SessionSection $messagesSection messages session section
+	 */
+	public function __construct(Http\SessionSection $messagesSection)
+	{
+		$this->messagesSection = $messagesSection;
+	}
 
 
 	/**
 	 * @inheritdoc
 	 */
-	public static function render(): void
+	public function render(): void
 	{
-		foreach (self::getMessagesSection() as $type => $messages) {
+		foreach ($this->messagesSection as $type => $messages) {
 			foreach ($messages as $message) {
 				$html = '
 					<div class="alert alert-%s alert-dismissable">
@@ -63,7 +73,7 @@ class Messages implements IRenderableStatic
 			}
 		}
 
-		self::cleanMessages();
+		$this->cleanMessages();
 	}
 
 
@@ -72,40 +82,29 @@ class Messages implements IRenderableStatic
 	 *
 	 * @param string $message message to be rendered
 	 * @param string $type one of TYPE_... constant
-	 * @return void
+	 * @return Messages self
 	 */
-	public static function addMessage(string $message, string $type = self::TYPE_INFO): void
+	public function addMessage(string $message, string $type = self::TYPE_INFO): Messages
 	{
 		if (!in_array($type, self::TYPES, true)) {
 			trigger_error(sprintf('Unknown message type %s.', $type), E_USER_WARNING);
 		}
 
-		self::getMessagesSection()[$type][] = $message;
+		$this->messagesSection[$type][] = $message;
+
+		return $this;
 	}
 
 
 	/**
 	 * Clean all stored messages.
 	 *
-	 * @return void
+	 * @return Messages self
 	 */
-	public static function cleanMessages(): void
+	public function cleanMessages(): Messages
 	{
-		self::getMessagesSection()->remove();
-	}
+		$this->messagesSection->remove();
 
-
-	/**
-	 * Returns messages session section.
-	 *
-	 * @return Http\SessionSection messages session section
-	 */
-	private static function getMessagesSection(): Http\SessionSection
-	{
-		if (!self::$messagesSection) {
-			self::$messagesSection = Configuration::getSession()->getSection('messages');
-		}
-
-		return self::$messagesSection;
+		return $this;
 	}
 }

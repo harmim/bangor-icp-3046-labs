@@ -9,16 +9,15 @@
 declare(strict_types=1);
 
 use Main\Configuration;
+use Main\Http;
 use Main\Renderable;
-use Main\Service;
 use Main\Utils;
 
 
 require_once __DIR__ . '/includes/configuration.php';
 
 
-/** @var Service\ProductService $productService */
-$productService = Configuration::getService(Service\ProductService::class);
+$productService = Configuration::getProductService();
 
 // fetch current product
 $id = Configuration::getHttpRequest()->getQuery('id');
@@ -26,10 +25,10 @@ if ($id && ($product = $productService->getProductById((int) $id))) {
 	Configuration::setTitleSection($product['name']);
 
 } else {
-	Renderable\Messages::addMessage('Product not found.', Renderable\Messages::TYPE_DANGER);
+	Configuration::getMessages()->addMessage('Product not found.', Renderable\Messages::TYPE_DANGER);
 }
 
-// TODO: Process buying of product.
+$productUrl = (new Http\Url('product.php'))->setQueryParameter('id', escape($id));
 
 siteHeader();
 
@@ -45,7 +44,7 @@ siteHeader();
 			<div class="col-md-8 top-margin-md">
 				<h2><?= escape($product['name']); ?></h2>
 
-				<form method="post" action="product.php">
+				<form method="get" action="buy.php">
 					<div class="d-flex justify-content-between align-items-center">
 						<strong class="text-danger"><?= Utils::formatPrice($product['price']); ?></strong>
 
@@ -71,7 +70,8 @@ siteHeader();
 								<i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy
 							</button>
 
-							<input type="hidden" name="id" value="<?= escape($product['id']); ?>">
+							<input type="hidden" name="productId" value="<?= escape($product['id']); ?>">
+							<input type="hidden" name="backLink" value="<?= $productUrl; ?>">
 						</div>
 					</div>
 				</form>

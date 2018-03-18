@@ -56,7 +56,7 @@ class Response implements IResponse
 			throw new \InvalidArgumentException("Bad HTTP response code '$code'.");
 		}
 
-		self::checkHeaders();
+		$this->checkHeaders();
 		$this->code = $code;
 		http_response_code($code);
 
@@ -69,7 +69,7 @@ class Response implements IResponse
 	 */
 	public function setHeader(string $name, ?string $value): IResponse
 	{
-		self::checkHeaders();
+		$this->checkHeaders();
 
 		if ($value === null) {
 			header_remove($name);
@@ -126,7 +126,7 @@ class Response implements IResponse
 		bool $httpOnly = null
 	): IResponse
 	{
-		self::checkHeaders();
+		$this->checkHeaders();
 
 		setcookie(
 			$name,

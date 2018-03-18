@@ -21,6 +21,23 @@ use Main\Validators;
 class UserService
 {
 	/**
+	 * @var Database\IDatabase database wrapper
+	 */
+	private $database;
+
+
+	/**
+	 * Creates user service.
+	 *
+	 * @param Database\IDatabase $database database wrapper
+	 */
+	public function __construct(Database\IDatabase $database)
+	{
+		$this->database = $database;
+	}
+
+
+	/**
 	 * Finds user by ID.
 	 *
 	 * @param int $id user's ID
@@ -34,7 +51,7 @@ class UserService
 			WHERE `id` = :id
 		';
 
-		return Database::queryOne($query, [
+		return $this->database->queryOne($query, [
 			':id' => $id,
 		]);
 	}
@@ -54,7 +71,7 @@ class UserService
 			WHERE `email` = :email
 		';
 
-		return Database::queryOne($query, [
+		return $this->database->queryOne($query, [
 			':email' => $email,
 		]);
 	}
@@ -73,7 +90,7 @@ class UserService
 	public function updateUser(int $id, array $data): UserService
 	{
 		$this->checkUserData($data);
-		Database::update('user', $data, 'WHERE id = :id', [
+		$this->database->update('user', $data, 'WHERE id = :id', [
 			':id' => $id,
 		]);
 
@@ -110,7 +127,7 @@ class UserService
 			'confirmPassword' => $confirmPassword,
 		];
 		$this->checkUserData($data);
-		Database::insert('user', $data);
+		$this->database->insert('user', $data);
 
 		return $this;
 	}

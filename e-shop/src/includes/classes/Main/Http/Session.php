@@ -26,9 +26,9 @@ class Session
 		SESSION_TIME = 'T';
 
 	/**
-	 * lifetime value 14 days
+	 * lifetime value 30 days
 	 */
-	private const LIFETIME = 60 * 60 * 24 * 14;
+	private const LIFETIME = 60 * 60 * 24 * 30;
 
 	/**
 	 * configuration
@@ -165,7 +165,7 @@ class Session
 			$this->regenerateId();
 		}
 
-		register_shutdown_function([$this, 'clean']);
+		register_shutdown_function([$this, 'close']);
 	}
 
 
@@ -221,14 +221,26 @@ class Session
 
 
 	/**
-	 * Cleans and minimizes meta structures.
-	 * This method is called automatically on shutdown, do not call it directly.
+	 * Ends the current session and store session data.
 	 *
 	 * @return void
-	 *
-	 * @internal
 	 */
-	public function clean(): void
+	public function close(): void
+	{
+		if ($this->started) {
+			$this->clean();
+			session_write_close();
+			$this->started = false;
+		}
+	}
+
+
+	/**
+	 * Cleans and minimizes meta structures.
+	 *
+	 * @return void
+	 */
+	private function clean(): void
 	{
 		if (!$this->started || empty($_SESSION)) {
 			return;
