@@ -31,13 +31,12 @@ endif
 
 .PHONY: grunt
 grunt:
-	node_modules/grunt-cli/bin/grunt default
+	node_modules/.bin/grunt default
 
 
 .PHONY: code-checker
 code-checker: composer
 	cd $(CODE_CHECKER_DIR) && composer install
-
 ifeq ($(FIX), 1)
 	$(CODE_CHECKER) -d src/ --short-arrays --strict-types -l -f
 	$(CODE_CHECKER) -d www/ -i js/ -i css/ --short-arrays --strict-types -l -f

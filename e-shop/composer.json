@@ -14,7 +14,7 @@
 		}
 	],
 	"require": {
-
+		"php": ">=7.1"
 	},
 	"require-dev": {
 		"nette/code-checker": "^2.12",
