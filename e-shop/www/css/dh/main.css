@@ -1,0 +1,25 @@
+/**
+ * Author: Dominik Harmim <harmim6@gmail.com>
+ */
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html { position: relative; min-height: 100%; }
+body { margin-bottom: 60px; }
+.footer { position: absolute; bottom: 0; width: 100%; height: 60px; line-height: 60px; background-color: #F5F5F5; }
+.footer > .container { padding-right: 15px; padding-left: 15px; }
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+main.container { padding: 5rem 1rem 3rem; }
+.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+@media (max-width: 767px) {
+	.top-margin-md { margin-top: 20px }
+}
+
+/* Product box
+-------------------------------------------------- */
+@media (min-width: 992px) {
+	.product-box .product-name { min-height: 100px; }
+}

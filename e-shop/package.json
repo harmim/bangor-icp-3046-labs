@@ -1,0 +1,47 @@
+{
+	"name": "bangor-icp-3046-labs",
+	"version": "1.0.0",
+	"description": "ICP-3046: Web-Based Applications - Labs.",
+	"type": "project",
+	"keywords": [
+		"php",
+		"webapplication",
+		"bangor",
+		"php7",
+		"eshop"
+	],
+	"homepage": "https://github.com/harmim/bangor-icp-3046-labs/",
+	"license": "UNLICENSED",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/harmim/bangor-icp-3046-labs.git"
+	},
+	"author": {
+		"name": "Dominik Harmim",
+		"email": "harmim6@gmail.com",
+		"url": "http://www.harmim.cz/"
+	},
+	"contributors": [
+		{
+			"name": "Dominik Harmim",
+			"email": "harmim6@gmail.com",
+			"url": "http://www.harmim.cz/"
+		}
+	],
+	"bugs": {
+		"url": "https://github.com/harmim/bangor-icp-3046-labs/issues",
+		"email": "harmim6@gmail.com"
+	},
+	"dependencies": {
+		"grunt": "^1.0.2",
+		"grunt-cli": "^1.2",
+		"load-grunt-tasks": "^3.5",
+		"grunt-contrib-clean": "^1.1",
+		"grunt-contrib-copy": "^1.0",
+		"font-awesome": "^4.7.0",
+		"jquery": "^3.3.1",
+		"jquery-validation": "^1.17.0",
+		"popper.js": "^1.14.1",
+		"bootstrap": "^4.0.0"
+	}
+}
