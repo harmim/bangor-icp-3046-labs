@@ -1,0 +1,28 @@
+{
+	"name": "harmim/bangor-icp-3046-labs",
+	"description": "ICP-3046: Web-Based Applications - Labs.",
+	"type": "project",
+	"keywords": ["php", "webapplication", "bangor", "php7", "eshop"],
+	"homepage": "https://github.com/harmim/bangor-icp-3046-labs/",
+	"license": "proprietary",
+	"authors": [
+		{
+			"name": "Dominik Harmim",
+			"email": "harmim6@gmail.com",
+			"homepage": "http://www.harmim.cz/",
+			"role": "Developer"
+		}
+	],
+	"require": {
+
+	},
+	"require-dev": {
+		"nette/code-checker": "^2.12",
+		"nette/coding-standard": "^0.8"
+	},
+	"autoload": {
+		"psr-4": {
+			"Main\\": "src/classes/Main"
+		}
+	}
+}

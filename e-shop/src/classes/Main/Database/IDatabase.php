@@ -25,7 +25,6 @@ interface IDatabase
 	 */
 	function queryOne(string $query, array $parameters = []): array;
 
-
 	/**
 	 * Runs query with given parameters and returns all resulting rows.
 	 *
@@ -34,7 +33,6 @@ interface IDatabase
 	 * @return array array of resulting rows
 	 */
 	function queryAll(string $query, array $parameters = []): array;
-
 
 	/**
 	 * Insert row to table with given data.
@@ -46,7 +44,6 @@ interface IDatabase
 	 * @throws \Exception in case of invalid identifiers
 	 */
 	function insert(string $table, array $data): int;
-
 
 	/**
 	 * Update table with given data and condition.
@@ -60,7 +57,6 @@ interface IDatabase
 	 * @throws \Exception in case of invalid identifiers
 	 */
 	function update(string $table, array $data, string $condition = '', array $parameters = []): int;
-
 
 	/**
 	 * Returns last inserted ID.

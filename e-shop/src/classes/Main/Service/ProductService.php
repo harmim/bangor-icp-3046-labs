@@ -62,7 +62,7 @@ class ProductService
 	 */
 	public function getAllProducts(): array
 	{
-		$query ='
+		$query = '
 			SELECT *
 			FROM `product`
 		';
@@ -82,7 +82,7 @@ class ProductService
 	{
 		$path = "images/products/$imageName";
 		if (!is_readable($path)) {
-			$path = "images/noimg.png";
+			$path = 'images/noimg.png';
 		}
 
 		return $path;

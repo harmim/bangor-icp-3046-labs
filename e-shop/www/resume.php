@@ -64,7 +64,7 @@ siteHeader();
 						<tr>
 							<th scope="row"><a href="/<?= (new Http\Url('product.php'))->setQueryParameter('id', $item['product']); ?>"><?= $item['name']; ?></a></th>
 							<td class="text-right"><?= $item['quantity']; ?></td>
-							<td class="text-danger text-right"><?= Utils::formatPrice((float)$item['price'] * (int)$item['quantity']); ?></td>
+							<td class="text-danger text-right"><?= Utils::formatPrice((float) $item['price'] * (int) $item['quantity']); ?></td>
 						</tr>
 						<?php break; ?>
 

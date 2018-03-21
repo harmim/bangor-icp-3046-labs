@@ -54,8 +54,7 @@ class OrderService
 		Http\SessionSection $orderSection,
 		BasketService $basketService,
 		Http\IRequest $httpRequest
-	)
-	{
+	) {
 		$this->database = $database;
 		$this->orderSection = $orderSection;
 		$this->basketService = $basketService;
@@ -140,11 +139,11 @@ class OrderService
 	 *
 	 * @param array $data order form data
 	 * @param Security\IIdentity $user user who created order
-	 * @return OrderService self
+	 * @return self
 	 *
 	 * @throws \UnexpectedValueException in case of supplied invalid data
 	 */
-	public function processOrder(array $data, Security\IIdentity $user): OrderService
+	public function processOrder(array $data, Security\IIdentity $user): self
 	{
 		// fetch shipping and payment
 		if (!($shipping = $this->getShippingMethodById((int) $data['shipping']))) {

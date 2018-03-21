@@ -77,7 +77,7 @@ class AddressForm implements IRenderable
 			</div>
 			',
 			isset($this->options['forename']['value']) ? escape($this->options['forename']['value']) : '',
-			isset($this->options['surname']['value']) ? escape($this->options['surname']['value']): ''
+			isset($this->options['surname']['value']) ? escape($this->options['surname']['value']) : ''
 		);
 		$html = str_replace('formName', $this->formName, $html);
 

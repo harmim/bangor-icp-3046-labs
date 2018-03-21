@@ -104,9 +104,9 @@ class Url
 	 * Sets URL scheme.
 	 *
 	 * @param string $scheme URL scheme
-	 * @return Url self
+	 * @return self
 	 */
-	public function setScheme(string $scheme): Url
+	public function setScheme(string $scheme): self
 	{
 		$this->scheme = $scheme;
 
@@ -129,9 +129,9 @@ class Url
 	 * Sets URL user.
 	 *
 	 * @param string $user URL user
-	 * @return Url self
+	 * @return self
 	 */
-	public function setUser(string $user): Url
+	public function setUser(string $user): self
 	{
 		$this->user = $user;
 
@@ -154,9 +154,9 @@ class Url
 	 * Sets URL password.
 	 *
 	 * @param string $password URL password
-	 * @return Url self
+	 * @return self
 	 */
-	public function setPassword(string $password): Url
+	public function setPassword(string $password): self
 	{
 		$this->password = $password;
 
@@ -179,9 +179,9 @@ class Url
 	 * Sets URL host.
 	 *
 	 * @param string $host URL host
-	 * @return Url self
+	 * @return self
 	 */
-	public function setHost(string $host): Url
+	public function setHost(string $host): self
 	{
 		$this->host = $host;
 		$this->setPath($this->getPath());
@@ -205,9 +205,9 @@ class Url
 	 * Sets URL port.
 	 *
 	 * @param int|null $port URL port
-	 * @return Url self
+	 * @return self
 	 */
-	public function setPort(?int $port): Url
+	public function setPort(?int $port): self
 	{
 		$this->port = $port;
 
@@ -230,9 +230,9 @@ class Url
 	 * Sets URL path.
 	 *
 	 * @param string $path URL path
-	 * @return Url self
+	 * @return self
 	 */
-	public function setPath(string $path): Url
+	public function setPath(string $path): self
 	{
 		if ($this->getHost() && substr($path, 0, 1) !== '/') {
 			$path = "/$path";
@@ -258,9 +258,9 @@ class Url
 	 * Sets URL query.
 	 *
 	 * @param string|array $query URL query
-	 * @return Url self
+	 * @return self
 	 */
-	public function setQuery($query): Url
+	public function setQuery($query): self
 	{
 		if (!is_array($query)) {
 			parse_str((string) $query, $query);
@@ -275,9 +275,9 @@ class Url
 	 * Appends query to current URL query.
 	 *
 	 * @param string|array $query URL query to be appended
-	 * @return Url self
+	 * @return self
 	 */
-	public function appendQuery($query): Url
+	public function appendQuery($query): self
 	{
 		if (!is_array($query)) {
 			parse_str((string) $query, $query);
@@ -316,9 +316,9 @@ class Url
 	 *
 	 * @param string $name query parameter name
 	 * @param mixed $value query parameter value
-	 * @return Url self
+	 * @return self
 	 */
-	public function setQueryParameter(string $name, $value): Url
+	public function setQueryParameter(string $name, $value): self
 	{
 		$this->query[$name] = $value;
 
@@ -341,9 +341,9 @@ class Url
 	 * Sets URL fragment.
 	 *
 	 * @param string $fragment URL fragment
-	 * @return Url self
+	 * @return self
 	 */
-	public function setFragment(string $fragment): Url
+	public function setFragment(string $fragment): self
 	{
 		$this->fragment = $fragment;
 

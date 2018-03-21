@@ -111,7 +111,6 @@ class Configuration
 	public static function initialize(): void
 	{
 		self::setErrorReporting();
-		self::autoloadRegister();
 		self::setTimeZone();
 		self::setHtmlHeaders();
 
@@ -378,22 +377,6 @@ class Configuration
 			@ini_set('display_errors', '0');
 			error_reporting(0);
 		}
-	}
-
-
-	/**
-	 * Registers class autoloader.
-	 *
-	 * @return void
-	 */
-	private static function autoloadRegister(): void
-	{
-		spl_autoload_register(function (string $class) {
-			$class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
-			$class = substr($class, strpos($class, DIRECTORY_SEPARATOR) + 1);
-
-			include __DIR__ . "/$class.php";
-		});
 	}
 
 

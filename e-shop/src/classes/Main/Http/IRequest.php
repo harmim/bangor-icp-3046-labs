@@ -23,7 +23,6 @@ interface IRequest
 		METHOD_GET = 'GET',
 		METHOD_POST = 'POST';
 
-
 	/**
 	 * Returns variable provided to the script via URL query ($_GET).
 	 * If no key is passed, returns the entire array.
@@ -33,7 +32,6 @@ interface IRequest
 	 * @return mixed $_GET variable
 	 */
 	function getQuery(string $key = null, bool $trim = true);
-
 
 	/**
 	 * Returns variable provided to the script via POST method ($_POST).
@@ -45,7 +43,6 @@ interface IRequest
 	 */
 	function getPost(string $key = null, bool $trim = true);
 
-
 	/**
 	 * Returns variable provided to the script via HTTP cookies ($_COOKIE).
 	 * If no key is passed, returns the entire array.
@@ -55,14 +52,12 @@ interface IRequest
 	 */
 	function getCookie(string $key = null);
 
-
 	/**
 	 * Returns HTTP request method.
 	 *
 	 * @return string HTTP request method.
 	 */
 	function getMethod(): string;
-
 
 	/**
 	 * Checks HTTP request method.
@@ -72,14 +67,12 @@ interface IRequest
 	 */
 	function isMethod(string $method): bool;
 
-
 	/**
 	 * Returns the IP address of the remote client.
 	 *
 	 * @return string|null IP address of the remote client
 	 */
 	function getRemoteAddress(): ?string;
-
 
 	/**
 	 * Returns running script name.

@@ -48,7 +48,7 @@ siteHeader();
 				Date: <?= Utils::datetime($order['created'])->format('j. n. Y'); ?>
 				| Order number: <strong><?= $order['id']; ?></strong>
 				| Status: <span class="text-warning"><?= $order['status']; ?></span>
-				| Paid: <strong><?= (bool)$order['is_paid'] ? 'Yes' : 'No'; ?></strong>
+				| Paid: <strong><?= (bool) $order['is_paid'] ? 'Yes' : 'No'; ?></strong>
 			</span>
 		</h5>
 

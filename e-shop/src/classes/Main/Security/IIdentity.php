@@ -23,7 +23,6 @@ interface IIdentity
 	 */
 	function getId(): int;
 
-
 	/**
 	 * Return user data.
 	 *

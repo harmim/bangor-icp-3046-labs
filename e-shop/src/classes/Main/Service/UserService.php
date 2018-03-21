@@ -82,12 +82,12 @@ class UserService
 	 *
 	 * @param int $id ID of user to be updated
 	 * @param array $data associative array with data to be updated
-	 * @return UserService self
+	 * @return self
 	 *
 	 * @throws \Exception in case of invalid identifiers
 	 * @throws \UnexpectedValueException in case of validation error, user message will be in exception message then
 	 */
-	public function updateUser(int $id, array $data): UserService
+	public function updateUser(int $id, array $data): self
 	{
 		$this->checkUserData($data);
 		$this->database->update('user', $data, 'WHERE id = :id', [
@@ -106,7 +106,7 @@ class UserService
 	 * @param string $surname user surname
 	 * @param string $password user password
 	 * @param string $confirmPassword confirm password (optional)
-	 * @return UserService self
+	 * @return self
 	 *
 	 * @throws \Exception in case of invalid identifiers
 	 * @throws \UnexpectedValueException in case of validation error, user message will be in exception message then
@@ -117,8 +117,7 @@ class UserService
 		string $surname,
 		string $password,
 		string $confirmPassword
-	): UserService
-	{
+	): self {
 		$data = [
 			'email' => $email,
 			'forename' => $forename,
@@ -137,12 +136,12 @@ class UserService
 	 * Check and eventually modify given user data.
 	 *
 	 * @param array $data data to be checked
-	 * @return UserService self
+	 * @return self
 	 *
 	 * @throws \UnexpectedValueException in case of validation error, user message will be in exception message then
 	 * @throws \RuntimeException if computed hash is invalid
 	 */
-	private function checkUserData(array &$data): UserService
+	private function checkUserData(array &$data): self
 	{
 		foreach ($data as $key => &$value) {
 			switch ($key) {

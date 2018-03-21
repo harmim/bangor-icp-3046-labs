@@ -203,9 +203,9 @@ class SessionSection implements \IteratorAggregate, \ArrayAccess, \Countable
 	 *
 	 * @param string|int|\DateTimeInterface|null $time expiration, 0 or null means when a user closes a browser
 	 * @param array $variables optional list of variables to expire
-	 * @return SessionSection self
+	 * @return self
 	 */
-	public function setExpiration($time, array $variables = []): SessionSection
+	public function setExpiration($time, array $variables = []): self
 	{
 		$this->start();
 
@@ -241,9 +241,9 @@ class SessionSection implements \IteratorAggregate, \ArrayAccess, \Countable
 	 * Removes the expiration from the section or specific variables.
 	 *
 	 * @param array $variables optional list of variables to expire
-	 * @return SessionSection self
+	 * @return self
 	 */
-	public function removeExpiration(array $variables = []): SessionSection
+	public function removeExpiration(array $variables = []): self
 	{
 		$this->start();
 

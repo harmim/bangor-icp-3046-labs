@@ -53,11 +53,11 @@ class User
 	 *
 	 * @param string $username username
 	 * @param string $password password
-	 * @return User self
+	 * @return self
 	 *
 	 * @throws Security\AuthenticationException if authentication failed
 	 */
-	public function login(string $username, string $password): User
+	public function login(string $username, string $password): self
 	{
 		$this->logout();
 		$this->setIdentity($this->authenticator->authenticate($username, $password));
@@ -70,9 +70,9 @@ class User
 	/**
 	 * Logs out the user from the current session.
 	 *
-	 * @return User self
+	 * @return self
 	 */
-	public function logout(): User
+	public function logout(): self
 	{
 		if ($this->isLoggedIn()) {
 			$this->setAuthenticated(false);
@@ -115,9 +115,9 @@ class User
 	 * Sets the user identity.
 	 *
 	 * @param Security\IIdentity|null user identity
-	 * @return User self
+	 * @return self
 	 */
-	public function setIdentity(?Security\IIdentity $identity): User
+	public function setIdentity(?Security\IIdentity $identity): self
 	{
 		$this->getUserSection()->identity = $identity;
 
@@ -129,9 +129,9 @@ class User
 	 * Enables log out after inactivity.
 	 *
 	 * @param string|int|\DateTimeInterface $time time expiration
-	 * @return User self
+	 * @return self
 	 */
-	public function setExpiration($time): User
+	public function setExpiration($time): self
 	{
 		$section = $this->getUserSection();
 		if ($time) {
@@ -152,11 +152,11 @@ class User
 	 * Sets the authenticated status of this user.
 	 *
 	 * @param bool $state authenticated status of user
-	 * @return User self
+	 * @return self
 	 *
 	 * @throws \RuntimeException if HTTP headers have been sent
 	 */
-	private function setAuthenticated(bool $state): User
+	private function setAuthenticated(bool $state): self
 	{
 		$this->getUserSection()->authenticated = $state;
 

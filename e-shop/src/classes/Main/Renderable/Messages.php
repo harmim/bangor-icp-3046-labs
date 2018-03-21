@@ -82,9 +82,9 @@ class Messages implements IRenderable
 	 *
 	 * @param string $message message to be rendered
 	 * @param string $type one of TYPE_... constant
-	 * @return Messages self
+	 * @return self
 	 */
-	public function addMessage(string $message, string $type = self::TYPE_INFO): Messages
+	public function addMessage(string $message, string $type = self::TYPE_INFO): self
 	{
 		if (!in_array($type, self::TYPES, true)) {
 			trigger_error(sprintf('Unknown message type %s.', $type), E_USER_WARNING);
@@ -99,9 +99,9 @@ class Messages implements IRenderable
 	/**
 	 * Clean all stored messages.
 	 *
-	 * @return Messages self
+	 * @return self
 	 */
-	public function cleanMessages(): Messages
+	public function cleanMessages(): self
 	{
 		$this->messagesSection->remove();
 

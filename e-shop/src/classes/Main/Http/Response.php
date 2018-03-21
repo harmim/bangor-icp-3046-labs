@@ -124,8 +124,7 @@ class Response implements IResponse
 		string $domain = null,
 		bool $secure = null,
 		bool $httpOnly = null
-	): IResponse
-	{
+	): IResponse {
 		$this->checkHeaders();
 
 		setcookie(

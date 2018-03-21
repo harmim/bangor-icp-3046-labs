@@ -26,35 +26,31 @@ interface IResponse
 		C404_NOT_FOUND = 404,
 		C500_INTERNAL_SERVER_ERROR = 500;
 
-
 	/**
 	 * Sets HTTP response code.
 	 *
 	 * @param int $code HTTP code
-	 * @return IResponse self
+	 * @return self
 	 */
-	function setCode(int $code): IResponse;
-
+	function setCode(int $code): self;
 
 	/**
 	 * Sends a HTTP header and replaces a previous one.
 	 *
 	 * @param string $name name of HTTP header
 	 * @param string|null $value value of HTTP header
-	 * @return IResponse self
+	 * @return self
 	 */
-	function setHeader(string $name, ?string $value): IResponse;
-
+	function setHeader(string $name, ?string $value): self;
 
 	/**
 	 * Sends a Content-type HTTP header.
 	 *
 	 * @param string $type type of content
 	 * @param string $charset character set
-	 * @return IResponse self
+	 * @return self
 	 */
-	function setContentType(string $type, string $charset = 'utf-8'): IResponse;
-
+	function setContentType(string $type, string $charset = 'utf-8'): self;
 
 	/**
 	 * Redirects to a new URL.
@@ -65,14 +61,12 @@ interface IResponse
 	 */
 	function redirect(string $url, int $code = self::C302_FOUND): void;
 
-
 	/**
 	 * Checks if headers have been sent.
 	 *
 	 * @return bool true if headers have been sent, false otherwise
 	 */
 	function isSent(): bool;
-
 
 	/**
 	 * Sends a cookie.
@@ -84,7 +78,7 @@ interface IResponse
 	 * @param string $domain cookie domain
 	 * @param bool $secure is cookie indicates that the cookie should only be transmitted over a secure HTTPS
 	 * @param bool $httpOnly when TRUE the cookie will be made accessible only through the HTTP protocol
-	 * @return IResponse self
+	 * @return self
 	 */
 	function setCookie(
 		string $name,
@@ -94,8 +88,7 @@ interface IResponse
 		string $domain = null,
 		bool $secure = null,
 		bool $httpOnly = null
-	): IResponse;
-
+	): self;
 
 	/**
 	 * Deletes a cookie.
@@ -104,7 +97,7 @@ interface IResponse
 	 * @param string $path cookie path
 	 * @param string $domain cookie domain
 	 * @param bool $secure is cookie indicates that the cookie should only be transmitted over a secure HTTPS
-	 * @return IResponse self
+	 * @return self
 	 */
-	function deleteCookie(string $name, string $path = null, string $domain = null, bool $secure = null): IResponse;
+	function deleteCookie(string $name, string $path = null, string $domain = null, bool $secure = null): self;
 }

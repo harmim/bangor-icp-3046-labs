@@ -62,9 +62,9 @@ class BasketService
 	 * Sets basket expiration.
 	 *
 	 * @param string|int|\DateTimeInterface|null $time expiration, 0 or null means when a user closes a browser
-	 * @return BasketService self
+	 * @return self
 	 */
-	public function setExpiration($time): BasketService
+	public function setExpiration($time): self
 	{
 		$this->basketSection->setExpiration($time);
 
@@ -78,11 +78,11 @@ class BasketService
 	 * @param int $productId product ID
 	 * @param int $quantity quantity of products to add
 	 * @param bool $updateQuantity update quantity of product already present in basket
-	 * @return BasketService self
+	 * @return self
 	 *
 	 * @throws \InvalidArgumentException if product with given ID does not exists
 	 */
-	public function addToBasket(int $productId, int $quantity, bool $updateQuantity = false): BasketService
+	public function addToBasket(int $productId, int $quantity, bool $updateQuantity = false): self
 	{
 		if (!$this->productService->getProductById($productId)) {
 			throw new \InvalidArgumentException('Product not found.');
@@ -109,9 +109,9 @@ class BasketService
 	 * Removes product from basket.
 	 *
 	 * @param int $productId ID of product to remove
-	 * @return BasketService self
+	 * @return self
 	 */
-	public function removeFromBasket(int $productId): BasketService
+	public function removeFromBasket(int $productId): self
 	{
 		unset($this->basketSection['products'][$productId]);
 
