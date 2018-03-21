@@ -23,4 +23,4 @@ use Main\Configuration;
 	</header>
 
 	<main class="container">
-		<?php Configuration::getMessages()->render(); ?>
+		<?php Configuration::getMessages()->render();

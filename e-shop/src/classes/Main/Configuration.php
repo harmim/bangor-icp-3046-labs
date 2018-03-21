@@ -430,13 +430,13 @@ class Configuration
 		// page will load resources only from authorized location
 		// remove new lines and multiple white spaces
 		$httpResponse->setHeader('Content-Security-Policy', preg_replace(['~\n~', '~\s+~'], ['', ' '], "
-			default-src 'self'; 
-			frame-src 'none'; 
-			img-src 'self' data: *; 
-			style-src 'self' 'unsafe-inline'; 
-			font-src 'self'; 
-			script-src 'self' 'unsafe-inline' https://use.fontawesome.com; 
-			base-uri 'self'; 
+			default-src 'self';
+			frame-src 'none';
+			img-src 'self' data: *;
+			style-src 'self' 'unsafe-inline';
+			font-src 'self';
+			script-src 'self' 'unsafe-inline';
+			base-uri 'self';
 			form-action 'self';
 		"));
 	}
