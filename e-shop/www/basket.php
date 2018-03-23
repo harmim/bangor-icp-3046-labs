@@ -9,8 +9,7 @@
 declare(strict_types=1);
 
 use Main\Configuration;
-use Main\Http;
-use Main\Utils;
+use Main\Helpers;
 
 
 require_once __DIR__ . '/../src/configuration.php';
@@ -62,7 +61,7 @@ siteHeader();
 
 <?php if ($basketProductsCount): ?>
 	<h4 class="d-flex justify-content-between align-items-center mb-3">
-		<span class="text-muted">Your Basket</span> <span class="badge badge-secondary badge-pill"><?= $basketProductsCount; ?></span>
+		<span class="text-muted">Your Basket</span> <span class="badge badge-secondary badge-pill"><?= escape($basketProductsCount); ?></span>
 	</h4>
 
 	<form method="post" action="basket.php">
@@ -83,7 +82,7 @@ siteHeader();
 					$product = $productData['product'];
 					$quantity = (int) $productData['quantity'];
 					$escapedProductId = escape($product['id']);
-					$productUrl = (new Http\Url('product.php'))->setQueryParameter('id', $escapedProductId);
+					$productUrl = (new Nette\Http\Url('product.php'))->setQueryParameter('id', $escapedProductId);
 
 					?>
 
@@ -101,7 +100,7 @@ siteHeader();
 								</span>
 
 								<label for="quantity<?= $escapedProductId; ?>"></label>
-								<input type="number" id="quantity<?= $escapedProductId; ?>" name="quantity<?= $escapedProductId; ?>" class="form-control input-number" value="<?= $quantity; ?>" min="1" max="100" size="5">
+								<input type="number" id="quantity<?= $escapedProductId; ?>" name="quantity<?= $escapedProductId; ?>" class="form-control input-number" value="<?= escape($quantity); ?>" min="1" max="100" size="5">
 
 								<span class="px-2 d-none d-lg-block">
 									<button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quantity<?= $escapedProductId; ?>">
@@ -112,7 +111,7 @@ siteHeader();
 						</td>
 
 						<td class="text-right">
-							<span class="text-danger"><?= Utils::formatPrice((float) $product['price'] * $quantity); ?></span>
+							<span class="text-danger"><?= Helpers::formatPrice((float) $product['price'] * $quantity); ?></span>
 						</td>
 
 						<td class="text-right">
@@ -129,7 +128,7 @@ siteHeader();
 					</th>
 
 					<td class="text-right">
-						<span class="text-danger"><strong><?= Utils::formatPrice($basketService->getBasketProductsPrice()); ?></strong></span>
+						<span class="text-danger"><strong><?= Helpers::formatPrice($basketService->getBasketProductsPrice()); ?></strong></span>
 					</td>
 
 					<td></td>

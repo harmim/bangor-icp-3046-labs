@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Main\Renderable;
 
+use Nette;
+
 
 /**
  * Address form component.
@@ -16,6 +18,9 @@ namespace Main\Renderable;
  */
 class AddressForm implements IRenderable
 {
+	use Nette\SmartObject;
+
+
 	/**
 	 * @var string form name
 	 */
@@ -45,42 +50,63 @@ class AddressForm implements IRenderable
 	 */
 	public function render(): void
 	{
-		$html = sprintf(
-			'
-			<div class="form-row">
-				<div class="col-md-6 form-group">
-					<label for="formNameForename">Forename</label>
-					<input type="text" class="form-control" id="formNameForename" name="formNameForename" value="%s" placeholder="Enter forename" required>
-				</div>
+		$html = Nette\Utils\Html::el();
+		$row = Nette\Utils\Html::el('div', [
+			'class' => 'form-row',
+		]);
+		$col = Nette\Utils\Html::el('div', [
+			'class' => ['col-md-6', 'form-group'],
+		]);
 
-				<div class="col-md-6 form-group">
-					<label for="formNameSurname">Surname</label>
-					<input type="text" class="form-control" id="formNameSurname" name="formNameSurname" value="%s" placeholder="Enter surname" required>
-				</div>
-			</div>
-
-			<div class="mb-3">
-				<label for="formNameAddress">Address</label>
-				<input type="text" class="form-control" id="formNameAddress" name="formNameAddress" placeholder="Enter address" required>
-			</div>
-
-			<div class="form-row">
-				<div class="col-md-6 mb-3">
-					<label for="formNameCity">City</label>
-					<input type="text" class="form-control" id="formNameCity" name="formNameCity" placeholder="Enter city" required>
-				</div>
-
-				<div class="col-md-6 mb-3">
-					<label for="formNameZip">Zip</label>
-					<input type="text" class="form-control" id="formNameZip" name="formNameZip" placeholder="Enter zip" required>
-				</div>
-			</div>
-			',
-			isset($this->options['forename']['value']) ? escape($this->options['forename']['value']) : '',
-			isset($this->options['surname']['value']) ? escape($this->options['surname']['value']) : ''
+		$html->addHtml(
+			(clone $row)
+				->addHtml((clone $col)->addHtml($this->createInput('forename', 'Forename')))
+				->addHtml((clone $col)->addHtml($this->createInput('surname', 'Surname')))
 		);
-		$html = str_replace('formName', $this->formName, $html);
+
+		$html->create('div', [
+			'class' => 'mb-3',
+		])->addHtml($this->createInput('address', 'Address'));
+
+		$html->addHtml(
+			(clone $row)
+				->addHtml((clone $col)->addHtml($this->createInput('city', 'City')))
+				->addHtml((clone $col)->addHtml($this->createInput('zip', 'Zip')))
+		);
 
 		echo $html;
+	}
+
+
+	/**
+	 * Creates HTML input with it's label.
+	 *
+	 * @param string $name input name
+	 * @param string $label input label
+	 * @return Nette\Utils\Html HTML input with it's label
+	 */
+	private function createInput(string $name, string $label): Nette\Utils\Html
+	{
+		$input = Nette\Utils\Html::el();
+		$id = escape($this->formName . ucfirst($name));
+
+		$input->create('label', [
+			'for' => $id,
+		])->setText($label);
+
+		$attrs = [
+			'type' => 'text',
+			'class' => 'form-control',
+			'id' => $id,
+			'name' => $id,
+			'placeholder' => escape('Enter ' . lcfirst($label)),
+			'required' => true,
+		];
+		if (isset($this->options[$name]['value'])) {
+			$attrs['value'] = escape($this->options[$name]['value']);
+		}
+		$input->create('input', $attrs);
+
+		return $input;
 	}
 }

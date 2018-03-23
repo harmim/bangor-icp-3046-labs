@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Main\Database;
 
+use Nette;
+
 
 /**
  * MySQL PDO database wrapper.
@@ -16,6 +18,9 @@ namespace Main\Database;
  */
 class MySqlDatabase implements IDatabase
 {
+	use Nette\SmartObject;
+
+
 	/**
 	 * PDO connection options
 	 */

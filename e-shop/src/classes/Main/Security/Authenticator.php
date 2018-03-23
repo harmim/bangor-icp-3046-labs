@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Main\Security;
 
 use Main\Configuration;
+use Nette;
 
 
 /**
@@ -19,6 +20,8 @@ use Main\Configuration;
  */
 class Authenticator implements IAuthenticator
 {
+	use Nette\SmartObject;
+
 	/**
 	 * @inheritdoc
 	 */

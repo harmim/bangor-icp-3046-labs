@@ -9,10 +9,9 @@
 declare(strict_types=1);
 
 use Main\Configuration;
-use Main\Http;
 use Main\Renderable;
 use Main\Security;
-use Main\Utils;
+use Main\Helpers;
 
 
 require_once __DIR__ . '/../src/configuration.php';
@@ -36,12 +35,9 @@ if (!$basketProductsCount) {
 	Configuration::redirect('basket.php');
 }
 
-// get shipping and payment methods
-$orderService = Configuration::getOrderService();
-$shippingMethods = $orderService->getAllShippingMethods();
-$paymentMethods = $orderService->getAllPaymentMethods();
 
 // process and validate checkout form
+$orderService = Configuration::getOrderService();
 $identity = $user->getIdentity();
 $post = Configuration::getHttpRequest()->getPost();
 if (isset($post['submit'])) {
@@ -86,11 +82,14 @@ if (isset($post['submit'])) {
 		} catch (UnexpectedValueException $e) {
 			$messages->addMessage($e->getMessage(), $messages::TYPE_DANGER);
 		}
-
 	} else {
 		$messages->addMessage('Please enter all required fields.', $messages::TYPE_DANGER);
 	}
 }
+
+// get shipping and payment methods
+$shippingMethods = $orderService->getAllShippingMethods();
+$paymentMethods = $orderService->getAllPaymentMethods();
 
 siteHeader();
 
@@ -101,7 +100,7 @@ siteHeader();
 <div class="row">
 	<div class="col-md-4 order-md-2 mb-4">
 		<h4 class="d-flex justify-content-between align-items-center mb-3">
-			<span class="text-muted">Your Basket</span> <span class="badge badge-secondary badge-pill"><?= $basketProductsCount; ?></span>
+			<span class="text-muted">Your Basket</span> <span class="badge badge-secondary badge-pill"><?= escape($basketProductsCount); ?></span>
 		</h4>
 
 		<table class="table">
@@ -119,20 +118,20 @@ siteHeader();
 
 				$product = $productData['product'];
 				$quantity = (int) $productData['quantity'];
-				$productUrl = (new Http\Url('product.php'))->setQueryParameter('id', escape($product['id']));
+				$productUrl = (new Nette\Http\Url('product.php'))->setQueryParameter('id', escape($product['id']));
 
 				?>
 
 				<tr>
 					<th scope="row"><small><a href="/<?= $productUrl; ?>"><?= escape($product['name']); ?></a></small></th>
-					<td class="text-right"><small><?= $quantity; ?></small></td>
-					<td class="text-danger text-right"><small><?= Utils::formatPrice((float) $product['price'] * $quantity); ?></small></td>
+					<td class="text-right"><small><?= escape($quantity); ?></small></td>
+					<td class="text-danger text-right"><small><?= Helpers::formatPrice((float) $product['price'] * $quantity); ?></small></td>
 				</tr>
 			<?php endforeach; ?>
 
 			<tr>
 				<th scope="row" colspan="2"><small><strong>Total</strong></small></th>
-				<td class="text-danger text-right"><small><strong><?= Utils::formatPrice($basketService->getBasketProductsPrice()); ?></strong></small></td>
+				<td class="text-danger text-right"><small><strong><?= Helpers::formatPrice($basketService->getBasketProductsPrice()); ?></strong></small></td>
 			</tr>
 		</tbody>
 	</table>
@@ -148,7 +147,7 @@ siteHeader();
 			<h4 class="mb-3">Billing address</h4>
 			<div class="mb-3">
 				<label for="email">Email</label>
-				<input type="email" class="form-control" id="email" name="email" value="<?= $userData['email']; ?>" placeholder="Enter email" required readonly>
+				<input type="email" class="form-control" id="email" name="email" value="<?= escape($userData['email']); ?>" placeholder="Enter email" required readonly>
 			</div>
 			<?php
 
@@ -195,7 +194,7 @@ siteHeader();
 						<div class="custom-control custom-radio">
 							<input id="shipping<?= $escapedShippingId; ?>" name="shipping" value="<?= $escapedShippingId; ?>" type="radio" class="custom-control-input" <?php if ($key === 0) echo 'checked'; ?> required>
 							<label class="custom-control-label" for="shipping<?= $escapedShippingId; ?>">
-								<?= $shippingMethod['name']; ?> ( <span class="text-danger"><?= Utils::formatPrice($shippingMethod['price']); ?></span> )
+								<?= escape($shippingMethod['name']); ?> ( <span class="text-danger"><?= Helpers::formatPrice($shippingMethod['price']); ?></span> )
 							</label>
 						</div>
 					<?php endforeach; ?>
@@ -217,7 +216,7 @@ siteHeader();
 						<div class="custom-control custom-radio">
 							<input id="payment<?= $escapedPaymentId; ?>" name="payment" value="<?= $escapedPaymentId; ?>" type="radio" class="custom-control-input" <?php if ($key === 0) echo 'checked'; ?> required>
 							<label class="custom-control-label" for="payment<?= $escapedPaymentId; ?>">
-								<?= $paymentMethod['name']; ?> ( <span class="text-danger"><?= Utils::formatPrice($paymentMethod['price']); ?></span> )
+								<?= escape($paymentMethod['name']); ?> ( <span class="text-danger"><?= Helpers::formatPrice($paymentMethod['price']); ?></span> )
 							</label>
 						</div>
 					<?php endforeach; ?>

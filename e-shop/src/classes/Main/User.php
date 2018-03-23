@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace Main;
 
-use Main\Http;
 use Main\Security;
+use Nette;
 
 
 /**
@@ -19,8 +19,11 @@ use Main\Security;
  */
 class User
 {
+	use Nette\SmartObject;
+
+
 	/**
-	 * @var Http\Session session instance
+	 * @var Nette\Http\Session session instance
 	 */
 	private $session;
 
@@ -30,7 +33,7 @@ class User
 	private $authenticator;
 
 	/**
-	 * @var Http\SessionSection|null user session section
+	 * @var Nette\Http\SessionSection|null user session section
 	 */
 	private $userSection;
 
@@ -38,10 +41,10 @@ class User
 	/**
 	 * Creates user authentication object.
 	 *
-	 * @param Http\Session $session session instance
+	 * @param Nette\Http\Session $session session instance
 	 * @param Security\IAuthenticator $authenticator authenticator instance
 	 */
-	public function __construct(Http\Session $session, Security\IAuthenticator $authenticator)
+	public function __construct(Nette\Http\Session $session, Security\IAuthenticator $authenticator)
 	{
 		$this->session = $session;
 		$this->authenticator = $authenticator;
@@ -56,6 +59,7 @@ class User
 	 * @return self
 	 *
 	 * @throws Security\AuthenticationException if authentication failed
+	 * @throws \RuntimeException if HTTP headers have been sent
 	 */
 	public function login(string $username, string $password): self
 	{
@@ -71,6 +75,7 @@ class User
 	 * Logs out the user from the current session.
 	 *
 	 * @return self
+	 * @throws \RuntimeException if HTTP headers have been sent
 	 */
 	public function logout(): self
 	{
@@ -135,7 +140,7 @@ class User
 	{
 		$section = $this->getUserSection();
 		if ($time) {
-			$time = Utils::datetime($time)->format('U');
+			$time = Nette\Utils\DateTime::from($time)->getTimestamp();
 			$section->expireDelta = $time - time();
 
 		} else {
@@ -171,9 +176,9 @@ class User
 	 * Returns user session section.
 	 *
 	 * @param bool $need need this section
-	 * @return Http\SessionSection|null user session section
+	 * @return Nette\Http\SessionSection|null user session section
 	 */
-	private function getUserSection(bool $need = true): ?Http\SessionSection
+	private function getUserSection(bool $need = true): ?Nette\Http\SessionSection
 	{
 		if ($this->userSection) {
 			return $this->userSection;

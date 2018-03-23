@@ -9,8 +9,9 @@ declare(strict_types=1);
 namespace Main\Service;
 
 use Main\Database;
-use Main\Http;
+use Main\Helpers;
 use Main\Security;
+use Nette;
 
 
 /**
@@ -20,13 +21,16 @@ use Main\Security;
  */
 class OrderService
 {
+	use Nette\SmartObject;
+
+
 	/**
 	 * @var Database\IDatabase database wrapper
 	 */
 	private $database;
 
 	/**
-	 * @var Http\SessionSection order session section
+	 * @var Nette\Http\SessionSection order session section
 	 */
 	private $orderSection;
 
@@ -36,7 +40,7 @@ class OrderService
 	private $basketService;
 
 	/**
-	 * @var Http\IRequest HTTP request
+	 * @var Nette\Http\IRequest HTTP request
 	 */
 	private $httpRequest;
 
@@ -45,15 +49,15 @@ class OrderService
 	 * Creates order service.
 	 *
 	 * @param Database\IDatabase $database database wrapper
-	 * @param Http\SessionSection $orderSection order session section
+	 * @param Nette\Http\SessionSection $orderSection order session section
 	 * @param BasketService $basketService basket service
-	 * @param Http\IRequest $httpRequest HTTP request
+	 * @param Nette\Http\IRequest $httpRequest HTTP request
 	 */
 	public function __construct(
 		Database\IDatabase $database,
-		Http\SessionSection $orderSection,
+		Nette\Http\SessionSection $orderSection,
 		BasketService $basketService,
-		Http\IRequest $httpRequest
+		Nette\Http\IRequest $httpRequest
 	) {
 		$this->database = $database;
 		$this->orderSection = $orderSection;
@@ -145,6 +149,8 @@ class OrderService
 	 */
 	public function processOrder(array $data, Security\IIdentity $user): self
 	{
+		Helpers::trimArray($data);
+
 		// fetch shipping and payment
 		if (!($shipping = $this->getShippingMethodById((int) $data['shipping']))) {
 			throw new \UnexpectedValueException('Invalid shipping method entered.');

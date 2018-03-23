@@ -9,8 +9,7 @@
 declare(strict_types=1);
 
 use Main\Configuration;
-use Main\Http;
-use Main\Utils;
+use Main\Helpers;
 
 
 require_once __DIR__ . '/../src/configuration.php';
@@ -45,9 +44,9 @@ siteHeader();
 	<div class="card card-body box-shadow mb-3">
 		<h5>
 			<span class="text-muted">
-				Date: <?= Utils::datetime($order['created'])->format('j. n. Y'); ?>
-				| Order number: <strong><?= $order['id']; ?></strong>
-				| Status: <span class="text-warning"><?= $order['status']; ?></span>
+				Date: <?= escape(Nette\Utils\DateTime::from($order['created'])->format('j. n. Y')); ?>
+				| Order number: <strong><?= escape($order['id']); ?></strong>
+				| Status: <span class="text-warning"><?= escape($order['status']); ?></span>
 				| Paid: <strong><?= (bool) $order['is_paid'] ? 'Yes' : 'No'; ?></strong>
 			</span>
 		</h5>
@@ -68,23 +67,23 @@ siteHeader();
 						case 'product':
 					?>
 							<tr>
-								<th scope="row"><a href="/<?= (new Http\Url('product.php'))->setQueryParameter('id', $item['product']); ?>"><?= $item['name']; ?></a></th>
-								<td class="text-center"><?= $item['quantity']; ?></td>
-								<td class="text-danger text-right"><?= Utils::formatPrice((float) $item['price'] * (int) $item['quantity']); ?></td>
+								<th scope="row"><a href="/<?= (new Nette\Http\Url('product.php'))->setQueryParameter('id', escape($item['product'])); ?>"><?= escape($item['name']); ?></a></th>
+								<td class="text-center"><?= escape($item['quantity']); ?></td>
+								<td class="text-danger text-right"><?= Helpers::formatPrice((float) $item['price'] * (int) $item['quantity']); ?></td>
 							</tr>
 							<?php break; ?>
 
 						<?php case 'shipping': ?>
 							<tr>
-								<th scope="row" colspan="2"><strong>Shipping:</strong> <?= $item['name']; ?></th>
-								<td class="text-danger text-right"><?= Utils::formatPrice($item['price']); ?></td>
+								<th scope="row" colspan="2"><strong>Shipping:</strong> <?= escape($item['name']); ?></th>
+								<td class="text-danger text-right"><?= Helpers::formatPrice($item['price']); ?></td>
 							</tr>
 							<?php break; ?>
 
 						<?php case 'payment': ?>
 							<tr>
-								<th scope="row" colspan="2"><strong>Payment:</strong> <?= $item['name']; ?></th>
-								<td class="text-danger text-right"><?= Utils::formatPrice($item['price']); ?></td>
+								<th scope="row" colspan="2"><strong>Payment:</strong> <?= escape($item['name']); ?></th>
+								<td class="text-danger text-right"><?= Helpers::formatPrice($item['price']); ?></td>
 							</tr>
 							<?php break; ?>
 					<?php endswitch; ?>
@@ -92,7 +91,7 @@ siteHeader();
 
 				<tr>
 					<th scope="row" colspan="2"><strong>Total</strong></th>
-					<td class="text-danger text-right"><strong><?= Utils::formatPrice($order['price']); ?></strong></td>
+					<td class="text-danger text-right"><strong><?= Helpers::formatPrice($order['price']); ?></strong></td>
 				</tr>
 			</tbody>
 		</table>
@@ -102,12 +101,12 @@ siteHeader();
 				<h5>Billing address</h5>
 
 				<ul class="list-group list-group-flush">
-					<li class="list-group-item">Email: <?= $order['email']; ?></li>
-					<li class="list-group-item">Forename: <?= $order['forename']; ?></li>
-					<li class="list-group-item">Surname: <?= $order['surname']; ?></li>
-					<li class="list-group-item">Address: <?= $order['address']; ?></li>
-					<li class="list-group-item">City: <?= $order['city']; ?></li>
-					<li class="list-group-item">Zip: <?= $order['zip']; ?></li>
+					<li class="list-group-item">Email: <?= escape($order['email']); ?></li>
+					<li class="list-group-item">Forename: <?= escape($order['forename']); ?></li>
+					<li class="list-group-item">Surname: <?= escape($order['surname']); ?></li>
+					<li class="list-group-item">Address: <?= escape($order['address']); ?></li>
+					<li class="list-group-item">City: <?= escape($order['city']); ?></li>
+					<li class="list-group-item">Zip: <?= escape($order['zip']); ?></li>
 				</ul>
 			</div>
 
@@ -116,11 +115,11 @@ siteHeader();
 					<h5>Shipping address</h5>
 
 					<ul class="list-group list-group-flush">
-						<li class="list-group-item">Forename: <?= $order['shipping_forename']; ?></li>
-						<li class="list-group-item">Surname: <?= $order['shipping_surname']; ?></li>
-						<li class="list-group-item">Address: <?= $order['shipping_address']; ?></li>
-						<li class="list-group-item">City: <?= $order['shipping_city']; ?></li>
-						<li class="list-group-item">Zip: <?= $order['shipping_zip']; ?></li>
+						<li class="list-group-item">Forename: <?= escape($order['shipping_forename']); ?></li>
+						<li class="list-group-item">Surname: <?= escape($order['shipping_surname']); ?></li>
+						<li class="list-group-item">Address: <?= escape($order['shipping_address']); ?></li>
+						<li class="list-group-item">City: <?= escape($order['shipping_city']); ?></li>
+						<li class="list-group-item">Zip: <?= escape($order['shipping_zip']); ?></li>
 					</ul>
 				</div>
 			<?php endif; ?>

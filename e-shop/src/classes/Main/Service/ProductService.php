@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Main\Service;
 
 use Main\Database;
+use Nette;
 
 
 /**
@@ -18,6 +19,9 @@ use Main\Database;
  */
 class ProductService
 {
+	use Nette\SmartObject;
+
+
 	/**
 	 * @var Database\IDatabase database wrapper
 	 */

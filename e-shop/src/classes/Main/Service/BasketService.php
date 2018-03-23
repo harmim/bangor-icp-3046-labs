@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Main\Service;
 
-use Main\Http;
+use Nette;
 
 
 /**
@@ -18,6 +18,9 @@ use Main\Http;
  */
 class BasketService
 {
+	use Nette\SmartObject;
+
+
 	/**
 	 * @var array list of products in basket
 	 *
@@ -36,7 +39,7 @@ class BasketService
 	private $basketProductsPrice = 0.0;
 
 	/**
-	 * @var Http\SessionSection basket session section
+	 * @var Nette\Http\SessionSection basket session section
 	 */
 	private $basketSection;
 
@@ -49,9 +52,10 @@ class BasketService
 	/**
 	 * Creates basket service.
 	 *
-	 * @param Http\SessionSection $basketSection basket session section
+	 * @param Nette\Http\SessionSection $basketSection basket session section
+	 * @param ProductService $productService product service
 	 */
-	public function __construct(Http\SessionSection $basketSection, ProductService $productService)
+	public function __construct(Nette\Http\SessionSection $basketSection, ProductService $productService)
 	{
 		$this->basketSection = $basketSection;
 		$this->productService = $productService;
@@ -90,13 +94,13 @@ class BasketService
 
 		if (
 			!$updateQuantity
-			&& isset($this->basketSection['products'][$productId]['quantity'])
-			&& is_int($this->basketSection['products'][$productId]['quantity'])
+			&& isset($this->basketSection->products[$productId]['quantity'])
+			&& is_int($this->basketSection->products[$productId]['quantity'])
 		) {
-			$this->basketSection['products'][$productId]['quantity'] += $quantity;
+			$this->basketSection->products[$productId]['quantity'] += $quantity;
 
 		} else {
-			$this->basketSection['products'][$productId] = [
+			$this->basketSection->products[$productId] = [
 				'quantity' => $quantity,
 			];
 		}
@@ -113,7 +117,7 @@ class BasketService
 	 */
 	public function removeFromBasket(int $productId): self
 	{
-		unset($this->basketSection['products'][$productId]);
+		unset($this->basketSection->products[$productId]);
 
 		return $this;
 	}
@@ -136,7 +140,7 @@ class BasketService
 		if ($this->basketProducts === null) {
 			$this->basketProducts = [];
 
-			foreach ($this->basketSection['products'] as $productId => $data) {
+			foreach ($this->basketSection->products as $productId => $data) {
 				if (
 					!isset($data['quantity'])
 					|| !is_int($data['quantity'])

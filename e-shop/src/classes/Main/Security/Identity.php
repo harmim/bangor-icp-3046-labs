@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Main\Security;
 
+use Nette;
+
 
 /**
  * Default implementation of IIdentity.
@@ -16,6 +18,9 @@ namespace Main\Security;
  */
 class Identity implements IIdentity
 {
+	use Nette\SmartObject;
+
+
 	/**
 	 * @var int user ID
 	 */

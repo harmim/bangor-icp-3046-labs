@@ -9,9 +9,8 @@
 declare(strict_types=1);
 
 use Main\Configuration;
-use Main\Http;
 use Main\Renderable;
-use Main\Utils;
+use Main\Helpers;
 
 
 require_once __DIR__ . '/../src/configuration.php';
@@ -28,7 +27,7 @@ if ($id && ($product = $productService->getProductById((int) $id))) {
 	Configuration::getMessages()->addMessage('Product not found.', Renderable\Messages::TYPE_DANGER);
 }
 
-$productUrl = (new Http\Url('product.php'))->setQueryParameter('id', escape($id));
+$productUrl = (new Nette\Http\Url('product.php'))->setQueryParameter('id', escape($id));
 
 siteHeader();
 
@@ -46,7 +45,7 @@ siteHeader();
 
 				<form method="get" action="buy.php">
 					<div class="d-flex justify-content-between align-items-center">
-						<strong class="text-danger"><?= Utils::formatPrice($product['price']); ?></strong>
+						<strong class="text-danger"><?= Helpers::formatPrice($product['price']); ?></strong>
 
 						<div class="btn-group">
 							<div class="btn-group plus-minus-number">

@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Main\Security;
 
+use Nette;
+
 
 /**
  * Passwords tools.
@@ -16,6 +18,8 @@ namespace Main\Security;
  */
 class Passwords
 {
+	use Nette\StaticClass;
+
 	/**
 	 * Computes password hash.
 	 *

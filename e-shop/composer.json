@@ -14,11 +14,15 @@
 		}
 	],
 	"require": {
-		"php": ">=7.1"
+		"php": ">=7.1",
+		"ext-pdo": "*",
+		"nette/utils": "~2.5.1",
+		"nette/http": "~2.4.8",
+		"nette/mail": "~2.4.4"
 	},
 	"require-dev": {
-		"nette/code-checker": "^2.12",
-		"nette/coding-standard": "^0.8"
+		"nette/code-checker": "^2.12.0",
+		"nette/coding-standard": "^0.8.2"
 	},
 	"autoload": {
 		"psr-4": {

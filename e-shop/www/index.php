@@ -9,9 +9,7 @@
 declare(strict_types=1);
 
 use Main\Configuration;
-use Main\Http;
-use Main\Strings;
-use Main\Utils;
+use Main\Helpers;
 
 
 require_once __DIR__ . '/../src/configuration.php';
@@ -29,8 +27,8 @@ siteHeader();
 			<div class="card mb-3 box-shadow product-box">
 				<?php
 
-				$productUrl = (new Http\Url('product.php'))->setQueryParameter('id', escape($product['id']));
-				$buyUrl = (new Http\Url('buy.php'))->setQuery([
+				$productUrl = (new Nette\Http\Url('product.php'))->setQueryParameter('id', escape($product['id']));
+				$buyUrl = (new Nette\Http\Url('buy.php'))->setQuery([
 					'productId' => escape($product['id']),
 					'backLink' => 'index.php',
 				]);
@@ -43,10 +41,10 @@ siteHeader();
 
 				<div class="card-body">
 					<p class="card-text product-name">
-						<a href="/<?= $productUrl; ?>"><?= escape(Strings::truncate($product['name'], 70)); ?></a>
+						<a href="/<?= $productUrl; ?>"><?= escape(Nette\Utils\Strings::truncate($product['name'], 70)); ?></a>
 					</p>
 					<div class="d-flex justify-content-between align-items-center">
-						<small class="text-danger"><?= Utils::formatPrice($product['price']); ?></small>
+						<small class="text-danger"><?= Helpers::formatPrice($product['price']); ?></small>
 						<div class="btn-group">
 							<a href="/<?= $buyUrl; ?>" class="btn btn-sm btn-outline-success">
 								<i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy

@@ -62,7 +62,6 @@ if (isset($post['submit'])) {
 		} catch (UnexpectedValueException $e) {
 			$messages->addMessage($e->getMessage(), $messages::TYPE_DANGER);
 		}
-
 	} else {
 		$messages->addMessage('Please enter all required fields.', $messages::TYPE_DANGER);
 	}
@@ -82,13 +81,16 @@ siteHeader();
 		$personalInformationForm = new Renderable\PersonalInformationForm('personal_information.php', [
 			'email' => [
 				'value' => $userData['email'],
+				'required' => true,
 				'disabled' => true,
 			],
 			'forename' => [
 				'value' => $userData['forename'],
+				'required' => true,
 			],
 			'surname' => [
 				'value' => $userData['surname'],
+				'required' => true,
 			],
 			'submit' => [
 				'value' => 'Save',

@@ -62,8 +62,6 @@ if (isset($post['submit'])) {
 	} else {
 		$messages->addMessage('Please enter all required fields.', $messages::TYPE_DANGER);
 	}
-
-	Configuration::redirect('registration.php');
 }
 
 siteHeader();
@@ -79,12 +77,15 @@ siteHeader();
 		$registrationForm = new Renderable\PersonalInformationForm('registration.php', [
 			'email' => [
 				'value' => $post['email'] ?? null,
+				'required' => true,
 			],
 			'forename' => [
 				'value' => $post['forename'] ?? null,
+				'required' => true,
 			],
 			'surname' => [
 				'value' => $post['surname'] ?? null,
+				'required' => true,
 			],
 			'password' => [
 				'required' => true,

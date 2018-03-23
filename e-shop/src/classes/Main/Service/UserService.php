@@ -9,8 +9,10 @@ declare(strict_types=1);
 namespace Main\Service;
 
 use Main\Database;
+use Main\Helpers;
 use Main\Security;
 use Main\Validators;
+use Nette;
 
 
 /**
@@ -20,6 +22,9 @@ use Main\Validators;
  */
 class UserService
 {
+	use Nette\SmartObject;
+
+
 	/**
 	 * @var Database\IDatabase database wrapper
 	 */
@@ -89,6 +94,7 @@ class UserService
 	 */
 	public function updateUser(int $id, array $data): self
 	{
+		Helpers::trimArray($data);
 		$this->checkUserData($data);
 		$this->database->update('user', $data, 'WHERE id = :id', [
 			':id' => $id,
@@ -125,6 +131,7 @@ class UserService
 			'password' => $password,
 			'confirmPassword' => $confirmPassword,
 		];
+		Helpers::trimArray($data);
 		$this->checkUserData($data);
 		$this->database->insert('user', $data);
 

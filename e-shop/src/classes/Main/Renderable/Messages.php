@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Main\Renderable;
 
-use Main\Http;
+use Nette;
 
 
 /**
@@ -19,6 +19,9 @@ use Main\Http;
  */
 class Messages implements IRenderable
 {
+	use Nette\SmartObject;
+
+
 	/**
 	 * message types
 	 */
@@ -40,7 +43,7 @@ class Messages implements IRenderable
 
 
 	/**
-	 * @var Http\SessionSection messages session section
+	 * @var Nette\Http\SessionSection messages session section
 	 */
 	private $messagesSection;
 
@@ -48,9 +51,9 @@ class Messages implements IRenderable
 	/**
 	 * Creates Messages component.
 	 *
-	 * @param Http\SessionSection $messagesSection messages session section
+	 * @param Nette\Http\SessionSection $messagesSection messages session section
 	 */
-	public function __construct(Http\SessionSection $messagesSection)
+	public function __construct(Nette\Http\SessionSection $messagesSection)
 	{
 		$this->messagesSection = $messagesSection;
 	}
@@ -63,13 +66,18 @@ class Messages implements IRenderable
 	{
 		foreach ($this->messagesSection as $type => $messages) {
 			foreach ($messages as $message) {
-				$html = '
-					<div class="alert alert-%s alert-dismissable">
-						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>%s
-					</div>
-				';
+				$alert = Nette\Utils\Html::el('div', [
+					'class' => ['alert', 'alert-dismissable', "alert-$type"],
+				]);
+				$alert->create('a', [
+					'href' => '#',
+					'class' => 'close',
+					'data-dismiss' => 'alert',
+					'aria-label' => 'close',
+				])->setHtml('&times;');
+				$alert->addText($message);
 
-				printf($html, $type, escape($message));
+				echo $alert;
 			}
 		}
 
@@ -90,7 +98,7 @@ class Messages implements IRenderable
 			trigger_error(sprintf('Unknown message type %s.', $type), E_USER_WARNING);
 		}
 
-		$this->messagesSection[$type][] = $message;
+		$this->messagesSection->$type[] = $message;
 
 		return $this;
 	}

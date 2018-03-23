@@ -9,9 +9,10 @@
 declare(strict_types=1);
 
 use Main\Configuration;
+use Main\Helpers;
 
 
-$scriptName = Configuration::getHttpRequest()->getScriptName();
+$scriptName = Helpers::getScriptName();
 $isLoggedIn = Configuration::getUser()->isLoggedIn();
 
 ?>

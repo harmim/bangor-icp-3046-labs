@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Main\Database;
 
+use Nette;
+
 
 /**
  * Dummy database wrapper.
@@ -16,6 +18,8 @@ namespace Main\Database;
  */
 class DummyDatabase implements IDatabase
 {
+	use Nette\SmartObject;
+
 	/**
 	 * @inheritdoc
 	 */

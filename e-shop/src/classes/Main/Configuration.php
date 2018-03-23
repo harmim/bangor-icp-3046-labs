@@ -9,10 +9,10 @@ declare(strict_types=1);
 namespace Main;
 
 use Main\Database;
-use Main\Http;
 use Main\Renderable;
 use Main\Security;
 use Main\Service;
+use Nette;
 
 
 /**
@@ -22,6 +22,9 @@ use Main\Service;
  */
 class Configuration
 {
+	use Nette\StaticClass;
+
+
 	/**
 	 * default HTML title tag content
 	 */
@@ -63,17 +66,17 @@ class Configuration
 	private static $user;
 
 	/**
-	 * @var Http\IRequest|null HTTP request
+	 * @var Nette\Http\IRequest|null HTTP request
 	 */
 	private static $httpRequest;
 
 	/**
-	 * @var Http\IResponse|null HTTP response
+	 * @var Nette\Http\IResponse|null HTTP response
 	 */
 	private static $httpResponse;
 
 	/**
-	 * @var Http\Session|null session
+	 * @var Nette\Http\Session|null session
 	 */
 	private static $session;
 
@@ -113,7 +116,9 @@ class Configuration
 		self::setErrorReporting();
 		self::setTimeZone();
 		self::setHtmlHeaders();
+		self::initializeSession();
 
+		// set basket session expiration
 		self::getBasketService()->setExpiration('14 days');
 	}
 
@@ -219,12 +224,12 @@ class Configuration
 	/**
 	 * Returns HTTP request.
 	 *
-	 * @return Http\IRequest HTTP request
+	 * @return Nette\Http\IRequest HTTP request
 	 */
-	public static function getHttpRequest(): Http\IRequest
+	public static function getHttpRequest(): Nette\Http\IRequest
 	{
 		if (!self::$httpRequest) {
-			self::$httpRequest = new Http\Request();
+			self::$httpRequest = (new Nette\Http\RequestFactory())->createHttpRequest();
 		}
 
 		return self::$httpRequest;
@@ -234,12 +239,12 @@ class Configuration
 	/**
 	 * Returns HTTP response.
 	 *
-	 * @return Http\IResponse HTTP response
+	 * @return Nette\Http\IResponse HTTP response
 	 */
-	public static function getHttpResponse(): Http\IResponse
+	public static function getHttpResponse(): Nette\Http\IResponse
 	{
 		if (!self::$httpResponse) {
-			self::$httpResponse = new Http\Response();
+			self::$httpResponse = new Nette\Http\Response();
 		}
 
 		return self::$httpResponse;
@@ -249,12 +254,12 @@ class Configuration
 	/**
 	 * Returns session object instance.
 	 *
-	 * @return Http\Session session object instance
+	 * @return Nette\Http\Session session object instance
 	 */
-	public static function getSession(): Http\Session
+	public static function getSession(): Nette\Http\Session
 	{
 		if (!self::$session) {
-			self::$session = new Http\Session(self::getHttpRequest(), self::getHttpResponse());
+			self::$session = new Nette\Http\Session(self::getHttpRequest(), self::getHttpResponse());
 		}
 
 		return self::$session;
@@ -354,12 +359,13 @@ class Configuration
 	public static function redirect(string $url, int $code = null): void
 	{
 		if ($code === null) {
-			$code = self::getHttpRequest()->isMethod(Http\IRequest::METHOD_POST)
-				? Http\IResponse::C303_POST_GET
-				: Http\IResponse::C302_FOUND;
+			$code = self::getHttpRequest()->isMethod(Nette\Http\IRequest::POST)
+				? Nette\Http\IResponse::S303_POST_GET
+				: Nette\Http\IResponse::S302_FOUND;
 		}
 
 		self::getHttpResponse()->redirect($url, $code);
+		exit();
 	}
 
 
@@ -422,5 +428,22 @@ class Configuration
 			base-uri 'self';
 			form-action 'self';
 		"));
+	}
+
+
+	/**
+	 * Initializes session.
+	 *
+	 * @return void
+	 *
+	 * @throws Nette\InvalidStateException in case of session start error
+	 */
+	private static function initializeSession(): void
+	{
+		$session = self::getSession();
+		$session->setExpiration('30 days');
+		if ($session->exists()) {
+			$session->start();
+		}
 	}
 }

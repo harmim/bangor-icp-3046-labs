@@ -32,12 +32,12 @@ function siteFooter(): void
 
 
 /**
- * Shortcut for Main\Strings::escape with string casting.
+ * Shortcut for Main\Helpers::escape with string casting.
  *
- * @param mixed $input input for Main\Strings::escape
- * @return string Main\Strings::escape result
+ * @param mixed $input input for Main\Helpers::escape
+ * @return string Main\Helpers::escape result
  */
 function escape($input): string
 {
-	return Main\Strings::escape((string) $input);
+	return Main\Helpers::escape((string) $input);
 }
