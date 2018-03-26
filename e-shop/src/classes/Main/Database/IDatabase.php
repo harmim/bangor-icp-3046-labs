@@ -40,8 +40,6 @@ interface IDatabase
 	 * @param string $table table name to insert to
 	 * @param array $data associative array with data to insert
 	 * @return int number of affected rows
-	 *
-	 * @throws \Exception in case of invalid identifiers
 	 */
 	function insert(string $table, array $data): int;
 
@@ -53,8 +51,6 @@ interface IDatabase
 	 * @param string $condition update condition
 	 * @param array $parameters extra condition named parameters in associative array
 	 * @return int number of affected rows
-	 *
-	 * @throws \Exception in case of invalid identifiers
 	 */
 	function update(string $table, array $data, string $condition = '', array $parameters = []): int;
 

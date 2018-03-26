@@ -1,0 +1,184 @@
+<?php
+
+/**
+ * Order email temple.
+ *
+ * @author Dominik Harmim <harmim6@gmail.com>
+ */
+
+declare(strict_types=1);
+
+use Main\Configuration;
+use Main\Helpers;
+
+?>
+
+<html style="margin: 0; padding: 0;">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Language" content="" />
+	<title><?= $subject; ?></title>
+	<style type="text/css">
+		.ReadMsgBody { width: 100%; }
+		.ExternalClass { width: 100%; }
+		.ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height: 100%; }
+		#outlook a { padding: 0; }
+		body { width: 100% !important; min-width: 100% !important; color: #4b4b4b; }
+		a:link { text-decoration: none; }
+		a:visited { text-decoration: none;}
+		a:active { text-decoration: none;}
+		a:hover { text-decoration: underline !important; }
+		@media only screen and (max-width: 500px) {
+			td[class="head-subject"],
+			td[class="head-logo"],
+			td[class="body"] { padding-left: 10px !important; padding-right: 10px !important; }
+			td[class="head-logo"] { padding-left: 0 !important; width: auto !important; }
+			table[class="basket-list"] td { font-size: 13px !important; }
+		}
+	</style>
+</head>
+
+<body style="min-width: 100%; margin: 0; padding: 0; text-align: center; background: #f4f4f4; font-size: 13px; font-family: 'Helvetica Neue', Helvetica,  Arial, sans-serif; line-height: 1.4; color: #4b4b4b; -webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%">
+	<table bgcolor="#f4f4f4" width="100%" border="0" align="center" cellpadding="0" cellspacing="0" style="width: 100%;">
+		<tr>
+			<td valign="middle" style="padding: 10px 0; text-align: center;">
+				<center>
+					<div style="width: 100%; max-width: 600px; margin: 0 auto;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;">
+						<!--[if gte mso 9]>
+						<table cellpadding="0" cellspacing="0" border="0" width="600" style="margin: 0 auto;">
+							<tr>
+								<td style="padding: 10px 0 0; text-align: left;">
+						<![endif]-->
+
+						<table border="0" cellpadding="0" cellspacing="0" style="text-align: left; margin: 0; width: 100%; border: 0; padding: 0;">
+							<tr>
+								<td style="padding: 0 0 10px;">
+									<table border="0" cellpadding="0" cellspacing="0" style="text-align: left; margin: 0; width: 100%; border: 0; padding: 0;">
+										<tr>
+											<td class="head-subject" style="margin: 0; padding: 0 20px; background: #fff; border-radius: 3px 0 0 0; overflow: hidden;">
+												<h1 style="line-height: 1; margin: 0; padding: 0; font-size: 18px; font-weight: normal; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #4b4b4b;">
+													<?= $subject; ?>
+												</h1>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="padding: 0 0 10px;">
+									<table border="0" cellpadding="0" cellspacing="0" style="text-align: left; margin: 0; width: 100%; border: 0; padding: 0;">
+										<tr>
+											<td class="body" style="border-radius: 3px 3px 3px 3px; padding: 15px 20px 15px 20px; margin: 0; background: #fff; overflow: hidden; border-bottom: 1px solid #d6d6d6;">
+												<p style="line-height:1.4em; margin:0 0 15px; padding:0; font-size:14px; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#333;">
+													Thank you for your order. <br>
+													Your order number <strong><?= $order['id']; ?></strong> is in processing. <br>
+													We will inform you by email about the exact date and time of shipping.
+												</p>
+											</td>
+										</tr>
+
+										<tr>
+											<td class="body" style="border-radius: 3px 3px 3px 3px; padding: 15px 20px 15px 20px; margin: 0; background: #fff; overflow: hidden; border-bottom: 1px solid #d6d6d6;">
+												<table>
+													<thead>
+														<tr>
+															<th scope="col" style="text-align: left;">Product name</th>
+															<th scope="col" style="text-align: center;">Quantity</th>
+															<th scope="col" style="text-align: right;">Price</th>
+														</tr>
+													</thead>
+
+													<tbody>
+														<?php foreach ($order['items'] as $item): ?>
+															<?php
+															switch ($item['type']):
+																case 'product':
+															?>
+																	<tr>
+																		<th scope="row" style="text-align: left;"><a href="<?= Configuration::DOMAIN . '/' . (new Nette\Http\Url('product.php'))->setQueryParameter('id', escape($item['product'])); ?>"><?= escape($item['name']); ?></a></th>
+																		<td style="text-align: center;"><?= escape($item['quantity']); ?></td>
+																		<td style="text-align: right; color: red;"><?= Helpers::formatPrice((float) $item['price'] * (int) $item['quantity']); ?></td>
+																	</tr>
+																	<?php break; ?>
+
+																<?php case 'shipping': ?>
+																	<tr>
+																		<th scope="row" colspan="2" style="text-align: left;"><strong>Shipping:</strong> <?= escape($item['name']); ?></th>
+																		<td style="text-align: right; color: red;"><?= Helpers::formatPrice($item['price']); ?></td>
+																	</tr>
+																	<?php break; ?>
+
+																<?php case 'payment': ?>
+																	<tr>
+																		<th scope="row" colspan="2" style="text-align: left;"><strong>Payment:</strong> <?= escape($item['name']); ?></th>
+																		<td style="text-align: right; color: red;"><?= Helpers::formatPrice($item['price']); ?></td>
+																	</tr>
+																	<?php break; ?>
+															<?php endswitch; ?>
+														<?php endforeach; ?>
+
+														<tr>
+															<th scope="row" colspan="2" style="text-align: left;"><strong>Total</strong></th>
+															<td style="text-align: right; color: red;"><strong><?= Helpers::formatPrice($order['price']); ?></strong></td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+										</tr>
+
+										<tr>
+											<td class="body" style="border-radius: 3px 3px 3px 3px; padding: 15px 20px 15px 20px; margin: 0; background: #fff; overflow: hidden; border-bottom: 1px solid #d6d6d6;">
+												<strong>Billing address</strong>
+
+												<ul>
+													<li>Email: <?= escape($order['email']); ?></li>
+													<li>Forename: <?= escape($order['forename']); ?></li>
+													<li>Surname: <?= escape($order['surname']); ?></li>
+													<li>Address: <?= escape($order['address']); ?></li>
+													<li>City: <?= escape($order['city']); ?></li>
+													<li>Zip: <?= escape($order['zip']); ?></li>
+												</ul>
+											</td>
+										</tr>
+
+										<?php if ( ! empty($order['shipping_forename'])): ?>
+											<tr>
+												<td class="body" style="border-radius: 3px 3px 3px 3px; padding: 15px 20px 15px 20px; margin: 0; background: #fff; overflow: hidden; border-bottom: 1px solid #d6d6d6;">
+													<strong>Shipping address</strong>
+
+													<ul>
+														<li>Forename: <?= escape($order['shipping_forename']); ?></li>
+														<li>Surname: <?= escape($order['shipping_surname']); ?></li>
+														<li>Address: <?= escape($order['shipping_address']); ?></li>
+														<li>City: <?= escape($order['shipping_city']); ?></li>
+														<li>Zip: <?= escape($order['shipping_zip']); ?></li>
+													</ul>
+												</td>
+											</tr>
+										<?php endif; ?>
+									</table>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="padding: 0 10px;">
+									<p style="line-height: 1.4em; margin: 0 0 8px; text-align: center; padding: 0; font-size: 13px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #4b4b4b;">
+										Email sent from <a style="text-decoration: none; color: #009eeb;" href="<?= Configuration::DOMAIN; ?>"><?= Configuration::DOMAIN_WITHOUT_PROTOCOL; ?></a>
+									</p>
+								</td>
+							</tr>
+						</table>
+
+						<!--[if gte mso 9]>
+								</td>
+							</tr>
+						</table>
+						<![endif]-->
+					</div>
+				</center>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

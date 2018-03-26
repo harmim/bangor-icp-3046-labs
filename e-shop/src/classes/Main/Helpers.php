@@ -77,11 +77,42 @@ class Helpers
 	 * Trimmes given array.
 	 *
 	 * @param $array array to be trimmed
+	 * @return void
 	 */
-	public static function trimArray(&$array)
+	public static function trimArray(array &$array): void
 	{
 		array_walk_recursive($array, function (&$item) {
 			$item = trim($item);
 		});
+	}
+
+
+	/**
+	 * Returns mail HTML body from specific template.
+	 *
+	 * @param string $template template name without extension
+	 * @param array $parameters template variables values
+	 * @return string mail HTML body
+	 */
+	public static function getMailHtmlBody(string $template, array $parameters = []): string
+	{
+		$template = __SRC_DIR__ . "/templates/mails/$template.phtml";
+		if (!is_readable($template)) {
+			throw new \RuntimeException("Template '$template' has been not found.");
+		}
+
+		return call_user_func(function (string $_template, array $_parameters) {
+			foreach ($_parameters as $_parameterName => $_parameter) {
+				$$_parameterName = $_parameter;
+			}
+
+			try {
+				ob_start();
+				require $_template;
+
+			} finally {
+				return ob_get_clean();
+			}
+		}, $template, $parameters);
 	}
 }

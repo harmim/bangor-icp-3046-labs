@@ -49,7 +49,7 @@ siteHeader();
 		<thead>
 			<tr>
 				<th scope="col">Product name</th>
-				<th scope="col" class="text-right">Quantity</th>
+				<th scope="col" class="text-center">Quantity</th>
 				<th scope="col" class="text-right">Price</th>
 			</tr>
 		</thead>
@@ -62,7 +62,7 @@ siteHeader();
 				?>
 						<tr>
 							<th scope="row"><a href="/<?= (new Nette\Http\Url('product.php'))->setQueryParameter('id', escape($item['product'])); ?>"><?= escape($item['name']); ?></a></th>
-							<td class="text-right"><?= escape($item['quantity']); ?></td>
+							<td class="text-center"><?= escape($item['quantity']); ?></td>
 							<td class="text-danger text-right"><?= Helpers::formatPrice((float) $item['price'] * (int) $item['quantity']); ?></td>
 						</tr>
 						<?php break; ?>

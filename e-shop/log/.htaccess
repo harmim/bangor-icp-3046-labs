@@ -1,0 +1,4 @@
+# Author: Dominik Harmim <harmim6@gmail.com>
+
+Order Allow, Deny
+Deny from all

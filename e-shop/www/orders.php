@@ -55,7 +55,7 @@ siteHeader();
 			<thead>
 				<tr>
 					<th scope="col">Product name</th>
-					<th scope="col" class="text-right">Quantity</th>
+					<th scope="col" class="text-center">Quantity</th>
 					<th scope="col" class="text-right">Price</th>
 				</tr>
 			</thead>

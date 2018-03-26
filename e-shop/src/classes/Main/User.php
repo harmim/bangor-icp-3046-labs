@@ -59,7 +59,6 @@ class User
 	 * @return self
 	 *
 	 * @throws Security\AuthenticationException if authentication failed
-	 * @throws \RuntimeException if HTTP headers have been sent
 	 */
 	public function login(string $username, string $password): self
 	{
@@ -75,7 +74,6 @@ class User
 	 * Logs out the user from the current session.
 	 *
 	 * @return self
-	 * @throws \RuntimeException if HTTP headers have been sent
 	 */
 	public function logout(): self
 	{
@@ -158,8 +156,6 @@ class User
 	 *
 	 * @param bool $state authenticated status of user
 	 * @return self
-	 *
-	 * @throws \RuntimeException if HTTP headers have been sent
 	 */
 	private function setAuthenticated(bool $state): self
 	{

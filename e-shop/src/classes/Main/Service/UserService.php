@@ -89,7 +89,6 @@ class UserService
 	 * @param array $data associative array with data to be updated
 	 * @return self
 	 *
-	 * @throws \Exception in case of invalid identifiers
 	 * @throws \UnexpectedValueException in case of validation error, user message will be in exception message then
 	 */
 	public function updateUser(int $id, array $data): self
@@ -114,7 +113,6 @@ class UserService
 	 * @param string $confirmPassword confirm password (optional)
 	 * @return self
 	 *
-	 * @throws \Exception in case of invalid identifiers
 	 * @throws \UnexpectedValueException in case of validation error, user message will be in exception message then
 	 */
 	public function createUser(
@@ -146,7 +144,6 @@ class UserService
 	 * @return self
 	 *
 	 * @throws \UnexpectedValueException in case of validation error, user message will be in exception message then
-	 * @throws \RuntimeException if computed hash is invalid
 	 */
 	private function checkUserData(array &$data): self
 	{

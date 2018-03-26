@@ -25,8 +25,6 @@ class Passwords
 	 *
 	 * @param string $password the user's password
 	 * @return string the hashed password
-	 *
-	 * @throws \RuntimeException if computed hash is invalid
 	 */
 	public static function hash(string $password): string
 	{

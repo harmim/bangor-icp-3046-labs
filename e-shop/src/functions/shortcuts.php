@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 function siteHeader(): void
 {
-	require_once __DIR__ . '/../site_header.php';
+	require_once __SRC_DIR__ . '/templates/site_header.phtml';
 }
 
 
@@ -27,7 +27,7 @@ function siteHeader(): void
  */
 function siteFooter(): void
 {
-	require_once __DIR__ . '/../site_footer.php';
+	require_once __SRC_DIR__ . '/templates/site_footer.phtml';
 }
 
 

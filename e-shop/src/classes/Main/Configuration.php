@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Main;
 
 use Main\Database;
+use Main\Mail;
 use Main\Renderable;
 use Main\Security;
 use Main\Service;
@@ -23,6 +24,13 @@ use Nette;
 class Configuration
 {
 	use Nette\StaticClass;
+
+	/**
+	 * public constants
+	 */
+	public const
+		DOMAIN = 'http://icp3046.localhost.com',
+		DOMAIN_WITHOUT_PROTOCOL = 'icp3046.localhost.com';
 
 
 	/**
@@ -84,6 +92,11 @@ class Configuration
 	 * @var Renderable\Messages|null Messages component
 	 */
 	private static $messages;
+
+	/**
+	 * @var Nette\Mail\IMailer|null mailer
+	 */
+	private static $mailer;
 
 	/**
 	 * @var Service\UserService|null user service
@@ -282,6 +295,25 @@ class Configuration
 
 
 	/**
+	 * Returns mailer.
+	 *
+	 * @return Nette\Mail\IMailer mailer
+	 */
+	public static function getMailer(): Nette\Mail\IMailer
+	{
+		if (!self::$mailer) {
+			if (self::isDebugMode()) {
+				self::$mailer = new Mail\LogMailer();
+			} else {
+				self::$mailer = new Nette\Mail\SendmailMailer();
+			}
+		}
+
+		return self::$mailer;
+	}
+
+
+	/**
 	 * Returns user service.
 	 *
 	 * @return Service\UserService user service
@@ -341,7 +373,8 @@ class Configuration
 				self::getDatabase(),
 				self::getSession()->getSection('order'),
 				self::getBasketService(),
-				self::getHttpRequest()
+				self::getHttpRequest(),
+				self::getMailer()
 			);
 		}
 
@@ -435,8 +468,6 @@ class Configuration
 	 * Initializes session.
 	 *
 	 * @return void
-	 *
-	 * @throws Nette\InvalidStateException in case of session start error
 	 */
 	private static function initializeSession(): void
 	{

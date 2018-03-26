@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Main\Service;
 
+use Main\Configuration;
 use Main\Database;
 use Main\Helpers;
 use Main\Security;
@@ -44,6 +45,11 @@ class OrderService
 	 */
 	private $httpRequest;
 
+	/**
+	 * @var Nette\Mail\IMailer mailer
+	 */
+	private $mailer;
+
 
 	/**
 	 * Creates order service.
@@ -52,17 +58,20 @@ class OrderService
 	 * @param Nette\Http\SessionSection $orderSection order session section
 	 * @param BasketService $basketService basket service
 	 * @param Nette\Http\IRequest $httpRequest HTTP request
+	 * @param Nette\Mail\IMailer $mailer mailer
 	 */
 	public function __construct(
 		Database\IDatabase $database,
 		Nette\Http\SessionSection $orderSection,
 		BasketService $basketService,
-		Nette\Http\IRequest $httpRequest
+		Nette\Http\IRequest $httpRequest,
+		Nette\Mail\IMailer $mailer
 	) {
 		$this->database = $database;
 		$this->orderSection = $orderSection;
 		$this->basketService = $basketService;
 		$this->httpRequest = $httpRequest;
+		$this->mailer = $mailer;
 	}
 
 
@@ -216,6 +225,12 @@ class OrderService
 		$this->orderSection->id = $orderId;
 		$this->orderSection->setExpiration('10 minutes');
 
+		// send email
+		try {
+			$this->sendOrderEmail($orderId, $user);
+		} catch (Nette\Mail\SendException $e) {
+		}
+
 		return $this;
 	}
 
@@ -286,5 +301,33 @@ class OrderService
 	public function getOrderId(): ?int
 	{
 		return $this->orderSection->id ? (int) $this->orderSection->id : null;
+	}
+
+
+	/**
+	 * Sends order confirmation email.
+	 *
+	 * @param int $orderId ID of order
+	 * @param Security\IIdentity $user logged in user
+	 * @return void
+	 *
+	 * @throws Nette\Mail\SendException if send mail failed
+	 */
+	private function sendOrderEmail(int $orderId, Security\IIdentity $user): void
+	{
+		$order = $this->getUsersOrders($user, $orderId);
+		$subject = 'Inside order confirmation';
+		$htmlBody = Helpers::getMailHtmlBody('order', [
+			'subject' => $subject,
+			'order' => $order,
+		]);
+
+		$mail = (new Nette\Mail\Message())
+			->addTo($order['email'], "$order[forename] $order[surname]")
+			->setFrom('info@' . Configuration::DOMAIN_WITHOUT_PROTOCOL, 'Inside')
+			->setSubject($subject = 'Inside order confirmation')
+			->setHtmlBody($htmlBody);
+
+		$this->mailer->send($mail);
 	}
 }
