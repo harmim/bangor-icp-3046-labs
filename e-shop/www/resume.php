@@ -17,7 +17,6 @@ require_once __DIR__ . '/../src/configuration.php';
 
 Configuration::setTitleSection('Order resume');
 $orderService = Configuration::getOrderService();
-$user = Configuration::getUser();
 
 // redirect user away if his order session doesn't exists
 if (!$orderService->getOrderId()) {
@@ -25,6 +24,7 @@ if (!$orderService->getOrderId()) {
 }
 
 // redirect user to login page if he is not logged in
+$user = Configuration::getUser();
 if (!$user->isLoggedIn()) {
 	Configuration::getMessages()->addMessage('You have to be logged in if you want display your order resume.');
 	Configuration::getHttpResponse()->setCookie('loginBackLink', 'resume.php', '10 minutes');
@@ -40,7 +40,7 @@ siteHeader();
 
 <div class="card card-body box-shadow mb-3">
 	<h2 class="text-center">Thank you for your order.</h2>
-	<h4 class="text-center">Your order number <strong><?= escape($order['id']); ?></strong> is in processing.</h4>
+	<h4 class="text-center">Your order number <strong><?= $order['id']; ?></strong> is in processing.</h4>
 	<p class="text-center">
 		We will inform you by email about the exact date and time of shipping.
 	</p>
@@ -61,8 +61,8 @@ siteHeader();
 					case 'product':
 				?>
 						<tr>
-							<th scope="row"><a href="/<?= (new Nette\Http\Url('product.php'))->setQueryParameter('id', escape($item['product'])); ?>"><?= escape($item['name']); ?></a></th>
-							<td class="text-center"><?= escape($item['quantity']); ?></td>
+							<th scope="row"><a href="/<?= (new Nette\Http\Url('product.php'))->setQueryParameter('id', $item['product']); ?>"><?= escape($item['name']); ?></a></th>
+							<td class="text-center"><?= $item['quantity']; ?></td>
 							<td class="text-danger text-right"><?= Helpers::formatPrice((float) $item['price'] * (int) $item['quantity']); ?></td>
 						</tr>
 						<?php break; ?>

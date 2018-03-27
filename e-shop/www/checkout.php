@@ -9,20 +9,40 @@
 declare(strict_types=1);
 
 use Main\Configuration;
+use Main\PayPal;
 use Main\Renderable;
 use Main\Security;
 use Main\Helpers;
+use Main\Service;
 
 
 require_once __DIR__ . '/../src/configuration.php';
 
 
 Configuration::setTitleSection('Checkout process');
-$basketService = Configuration::getBasketService();
-$user = Configuration::getUser();
 $messages = Configuration::getMessages();
+$orderSection = Configuration::getSession()->getSection('order');
+
+// process PayPal response
+$query = Configuration::getHttpRequest()->getQuery();
+if (isset($query['paypalPayment'])) {
+	if ($query['paypalPayment'] === 'true') {
+		try {
+			PayPal\Payment::executePayment($query['paymentId'] ?? '', $query['PayerID'] ?? '');
+			$orderData = $orderSection->orderData;
+			$orderData['is_paid'] = 1;
+
+		} catch (RuntimeException $e) {
+			$messages->addMessage($e->getMessage(), $messages::TYPE_DANGER);
+		}
+	} else {
+		$messages->addMessage('PayPal payment has been canceled.', $messages::TYPE_WARNING);
+	}
+}
+unset($orderSection->orderData);
 
 // redirect user to login page if he is not logged in
+$user = Configuration::getUser();
 if (!$user->isLoggedIn()) {
 	$messages->addMessage('You have to be logged in to checkout your order.');
 	Configuration::getHttpResponse()->setCookie('loginBackLink', 'checkout.php', '10 minutes');
@@ -30,6 +50,7 @@ if (!$user->isLoggedIn()) {
 }
 
 // redirect user away if his Basket is empty
+$basketService = Configuration::getBasketService();
 $basketProductsCount = $basketService->getBasketProductsCount();
 if (!$basketProductsCount) {
 	Configuration::redirect('basket.php');
@@ -39,35 +60,49 @@ if (!$basketProductsCount) {
 // process and validate checkout form
 $orderService = Configuration::getOrderService();
 $identity = $user->getIdentity();
-$post = Configuration::getHttpRequest()->getPost();
-if (isset($post['submit'])) {
+$orderData = $orderData ?? Configuration::getHttpRequest()->getPost();
+if (isset($orderData['submit'])) {
 	if (
-		!empty($post['email'])
-		&& !empty($post['billingForename'])
-		&& !empty($post['billingSurname'])
-		&& !empty($post['billingAddress'])
-		&& !empty($post['billingCity'])
-		&& !empty($post['billingZip'])
+		!empty($orderData['email'])
+		&& !empty($orderData['billingForename'])
+		&& !empty($orderData['billingSurname'])
+		&& !empty($orderData['billingAddress'])
+		&& !empty($orderData['billingCity'])
+		&& !empty($orderData['billingZip'])
 		&& (
-			empty($post['shippingAddressEnabled'])
+			empty($orderData['shippingAddressEnabled'])
 			|| (
-				!empty('shippingAddressEnabled')
-				&& !empty($post['shippingForename'])
-				&& !empty($post['shippingSurname'])
-				&& !empty($post['shippingAddress'])
-				&& !empty($post['shippingCity'])
-				&& !empty($post['shippingZip'])
+				!empty($orderData['shippingAddressEnabled'])
+				&& !empty($orderData['shippingForename'])
+				&& !empty($orderData['shippingSurname'])
+				&& !empty($orderData['shippingAddress'])
+				&& !empty($orderData['shippingCity'])
+				&& !empty($orderData['shippingZip'])
 			)
 		)
-		&& !empty($post['shipping'])
-		&& !empty($post['payment'])
-		&& !empty($post['termsAgreement'])
+		&& !empty($orderData['shipping'])
+		&& !empty($orderData['payment'])
+		&& !empty($orderData['termsAgreement'])
 	) {
 		try {
+			// store order data and redirect to PayPal
+			if ($orderData['payment'] == Service\OrderService::PAYMENT_METHOD_ID_PAYPAL && empty($orderData['is_paid'])) {
+				$orderSection->orderData = $orderData;
+
+				$shippingMethod = $orderService->getShippingMethodById((int) $orderData['shipping']);
+				$payment = PayPal\Payment::createPayment(
+					$basketService->getBasketProducts(),
+					$basketService->getBasketProductsPrice(),
+					(float) $shippingMethod['price']
+				);
+
+				Configuration::redirect($payment->getApprovalLink());
+			}
+
 			$userService = Configuration::getUserService();
 			$userService->updateUser($identity->getId(), [
-				'forename' => $post['billingForename'],
-				'surname' => $post['billingSurname'],
+				'forename' => $orderData['billingForename'],
+				'surname' => $orderData['billingSurname'],
 			]);
 
 			// update identity
@@ -75,11 +110,11 @@ if (isset($post['submit'])) {
 			$identity = new Security\Identity($updatedUser['id'], $updatedUser);
 			$user->setIdentity($identity);
 
-			$orderService->processOrder($post, $identity);
+			$orderService->processOrder($orderData, $identity);
 
 			Configuration::redirect('resume.php');
 
-		} catch (UnexpectedValueException $e) {
+		} catch (UnexpectedValueException | RuntimeException $e) {
 			$messages->addMessage($e->getMessage(), $messages::TYPE_DANGER);
 		}
 	} else {
@@ -100,7 +135,7 @@ siteHeader();
 <div class="row">
 	<div class="col-md-4 order-md-2 mb-4">
 		<h4 class="d-flex justify-content-between align-items-center mb-3">
-			<span class="text-muted">Your Basket</span> <span class="badge badge-secondary badge-pill"><?= escape($basketProductsCount); ?></span>
+			<span class="text-muted">Your Basket</span> <span class="badge badge-secondary badge-pill"><?= $basketProductsCount; ?></span>
 		</h4>
 
 		<table class="table">
@@ -118,13 +153,13 @@ siteHeader();
 
 				$product = $productData['product'];
 				$quantity = (int) $productData['quantity'];
-				$productUrl = (new Nette\Http\Url('product.php'))->setQueryParameter('id', escape($product['id']));
+				$productUrl = (new Nette\Http\Url('product.php'))->setQueryParameter('id', $product['id']);
 
 				?>
 
 				<tr>
 					<th scope="row"><small><a href="/<?= $productUrl; ?>"><?= escape($product['name']); ?></a></small></th>
-					<td class="text-right"><small><?= escape($quantity); ?></small></td>
+					<td class="text-right"><small><?= $quantity; ?></small></td>
 					<td class="text-danger text-right"><small><?= Helpers::formatPrice((float) $product['price'] * $quantity); ?></small></td>
 				</tr>
 			<?php endforeach; ?>
@@ -185,15 +220,9 @@ siteHeader();
 
 				<div class="d-block my-3">
 					<?php foreach ($shippingMethods as $key => $shippingMethod): ?>
-						<?php
-
-						$escapedShippingId = escape($shippingMethod['id']);
-
-						?>
-
 						<div class="custom-control custom-radio">
-							<input id="shipping<?= $escapedShippingId; ?>" name="shipping" value="<?= $escapedShippingId; ?>" type="radio" class="custom-control-input" <?php if ($key === 0) echo 'checked'; ?> required>
-							<label class="custom-control-label" for="shipping<?= $escapedShippingId; ?>">
+							<input id="shipping<?= $shippingMethod['id']; ?>" name="shipping" value="<?= $shippingMethod['id']; ?>" type="radio" class="custom-control-input" <?php if ($key === 0) echo 'checked'; ?> required>
+							<label class="custom-control-label" for="shipping<?= $shippingMethod['id']; ?>">
 								<?= escape($shippingMethod['name']); ?> ( <span class="text-danger"><?= Helpers::formatPrice($shippingMethod['price']); ?></span> )
 							</label>
 						</div>
@@ -207,15 +236,9 @@ siteHeader();
 
 				<div class="d-block my-3">
 					<?php foreach ($paymentMethods as $key => $paymentMethod): ?>
-						<?php
-
-						$escapedPaymentId = escape($paymentMethod['id']);
-
-						?>
-
 						<div class="custom-control custom-radio">
-							<input id="payment<?= $escapedPaymentId; ?>" name="payment" value="<?= $escapedPaymentId; ?>" type="radio" class="custom-control-input" <?php if ($key === 0) echo 'checked'; ?> required>
-							<label class="custom-control-label" for="payment<?= $escapedPaymentId; ?>">
+							<input id="payment<?= $paymentMethod['id']; ?>" name="payment" value="<?= $paymentMethod['id']; ?>" type="radio" class="custom-control-input" <?php if ($key === 0) echo 'checked'; ?> required>
+							<label class="custom-control-label" for="payment<?= $paymentMethod['id']; ?>">
 								<?= escape($paymentMethod['name']); ?> ( <span class="text-danger"><?= Helpers::formatPrice($paymentMethod['price']); ?></span> )
 							</label>
 						</div>

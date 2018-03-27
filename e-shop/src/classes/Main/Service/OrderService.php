@@ -26,6 +26,12 @@ class OrderService
 
 
 	/**
+	 * PayPal payment method ID
+	 */
+	public const PAYMENT_METHOD_ID_PAYPAL = 2;
+
+
+	/**
 	 * @var Database\IDatabase database wrapper
 	 */
 	private $database;
@@ -171,6 +177,7 @@ class OrderService
 		// save order
 		$orderData = [
 			'user' => $user->getId(),
+			'is_paid' => $data['is_paid'] ?? 0,
 			'ip' => $this->httpRequest->getRemoteAddress(),
 			'email' => $data['email'],
 			'forename' => $data['billingForename'],
@@ -316,7 +323,8 @@ class OrderService
 	private function sendOrderEmail(int $orderId, Security\IIdentity $user): void
 	{
 		$order = $this->getUsersOrders($user, $orderId);
-		$subject = 'Inside order confirmation';
+		$title = Configuration::getConfig('common', 'title');
+		$subject = "$title - order confirmation";
 		$htmlBody = Helpers::getMailHtmlBody('order', [
 			'subject' => $subject,
 			'order' => $order,
@@ -324,8 +332,8 @@ class OrderService
 
 		$mail = (new Nette\Mail\Message())
 			->addTo($order['email'], "$order[forename] $order[surname]")
-			->setFrom('info@' . Configuration::DOMAIN_WITHOUT_PROTOCOL, 'Inside')
-			->setSubject($subject = 'Inside order confirmation')
+			->setFrom(Configuration::getConfig('common', 'email'), $title)
+			->setSubject($subject)
 			->setHtmlBody($htmlBody);
 
 		$this->mailer->send($mail);

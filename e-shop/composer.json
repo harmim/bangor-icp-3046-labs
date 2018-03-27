@@ -18,7 +18,8 @@
 		"ext-pdo": "*",
 		"nette/utils": "~2.5.1",
 		"nette/http": "~2.4.8",
-		"nette/mail": "~2.4.4"
+		"nette/mail": "~2.4.4",
+		"paypal/rest-api-sdk-php": "~1.13.0"
 	},
 	"require-dev": {
 		"nette/code-checker": "^2.12.0",

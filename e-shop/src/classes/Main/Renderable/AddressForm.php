@@ -29,7 +29,7 @@ class AddressForm implements IRenderable
 	/**
 	 * @var array form options
 	 */
-	private $options = [];
+	private $options;
 
 
 	/**

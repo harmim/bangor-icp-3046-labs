@@ -33,7 +33,7 @@ class Helpers
 			return 'Free';
 		}
 
-		return '£&nbsp;' . number_format($price, 2, '.', '&nbsp;');
+		return Configuration::getConfig('common', 'currency_symbol') . '&nbsp;' . number_format($price, 2, '.', '&nbsp;');
 	}
 
 
@@ -82,7 +82,9 @@ class Helpers
 	public static function trimArray(array &$array): void
 	{
 		array_walk_recursive($array, function (&$item) {
-			$item = trim($item);
+			if (is_string($item)) {
+				$item = trim($item);
+			}
 		});
 	}
 

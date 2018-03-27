@@ -44,8 +44,8 @@ siteHeader();
 	<div class="card card-body box-shadow mb-3">
 		<h5>
 			<span class="text-muted">
-				Date: <?= escape(Nette\Utils\DateTime::from($order['created'])->format('j. n. Y')); ?>
-				| Order number: <strong><?= escape($order['id']); ?></strong>
+				Date: <?= Nette\Utils\DateTime::from($order['created'])->format('j. n. Y'); ?>
+				| Order number: <strong><?= $order['id']; ?></strong>
 				| Status: <span class="text-warning"><?= escape($order['status']); ?></span>
 				| Paid: <strong><?= (bool) $order['is_paid'] ? 'Yes' : 'No'; ?></strong>
 			</span>
@@ -67,8 +67,8 @@ siteHeader();
 						case 'product':
 					?>
 							<tr>
-								<th scope="row"><a href="/<?= (new Nette\Http\Url('product.php'))->setQueryParameter('id', escape($item['product'])); ?>"><?= escape($item['name']); ?></a></th>
-								<td class="text-center"><?= escape($item['quantity']); ?></td>
+								<th scope="row"><a href="/<?= (new Nette\Http\Url('product.php'))->setQueryParameter('id', $item['product']); ?>"><?= escape($item['name']); ?></a></th>
+								<td class="text-center"><?= $item['quantity']; ?></td>
 								<td class="text-danger text-right"><?= Helpers::formatPrice((float) $item['price'] * (int) $item['quantity']); ?></td>
 							</tr>
 							<?php break; ?>

@@ -14,6 +14,7 @@ use Main\Renderable;
 use Main\Security;
 use Main\Service;
 use Nette;
+use PayPal;
 
 
 /**
@@ -25,43 +26,27 @@ class Configuration
 {
 	use Nette\StaticClass;
 
-	/**
-	 * public constants
-	 */
-	public const
-		DOMAIN = 'http://icp3046.localhost.com',
-		DOMAIN_WITHOUT_PROTOCOL = 'icp3046.localhost.com';
-
 
 	/**
-	 * default HTML title tag content
+	 * configuration file
 	 */
-	private const DEFAULT_HTML_TITLE = 'Inside';
-
-	/**
-	 * database details
-	 */
-	private const
-		DATABASE_HOST = 'localhost',
-		DATABASE_NAME = 'icp3046_eshop',
-		DATABASE_USER = 'root',
-		DATABASE_PASSWORD = '';
-
-	/**
-	 * time zone
-	 */
-	private const TIME_ZONE = 'Europe/London';
+	private const CONFIG_FILE = __SRC_DIR__ . '/configuration.ini';
 
 
 	/**
-	 * @var string HTML title tag content
+	 * @var string|null HTML title tag content
 	 */
-	private static $title = self::DEFAULT_HTML_TITLE;
+	private static $title;
 
 	/**
-	 * @var bool enable debug mode
+	 * @var bool|null enable debug mode
 	 */
-	private static $debugMode = true;
+	private static $debugMode;
+
+	/**
+	 * @var array|null configuration
+	 */
+	private static $configuration;
 
 	/**
 	 * @var Database\IDatabase|null database wrapper
@@ -130,9 +115,6 @@ class Configuration
 		self::setTimeZone();
 		self::setHtmlHeaders();
 		self::initializeSession();
-
-		// set basket session expiration
-		self::getBasketService()->setExpiration('14 days');
 	}
 
 
@@ -143,6 +125,10 @@ class Configuration
 	 */
 	public static function getTitle(): string
 	{
+		if (self::$title === null) {
+			self::$title = (string) self::getConfig('common', 'title');
+		}
+
 		return self::$title;
 	}
 
@@ -167,7 +153,7 @@ class Configuration
 	 */
 	public static function setTitleSection(string $section): void
 	{
-		self::$title = "$section | " . self::DEFAULT_HTML_TITLE;
+		self::$title = "$section | " . self::getConfig('common', 'title');
 	}
 
 
@@ -178,6 +164,10 @@ class Configuration
 	 */
 	public static function isDebugMode(): bool
 	{
+		if (self::$debugMode === null) {
+			self::$debugMode = (bool) self::getConfig('common', 'debug_mode');
+		}
+
 		return self::$debugMode;
 	}
 
@@ -195,6 +185,35 @@ class Configuration
 
 
 	/**
+	 * Returns particular configuration value by keys or entire configuration array.
+	 *
+	 * @param string[] $keys configuration keys
+	 * @return array|string|bool|null|int|float particular configuration value by keys or entire configuration array
+	 */
+	public static function getConfig(string ...$keys)
+	{
+		if (self::$configuration === null) {
+			if (!is_readable(self::CONFIG_FILE)) {
+				self::$configuration = [];
+			} else {
+				self::$configuration = parse_ini_file(self::CONFIG_FILE, true, INI_SCANNER_TYPED) ?: [];
+			}
+		}
+
+		$config = self::$configuration;
+		foreach ($keys as $key) {
+			if (array_key_exists($key, $config)) {
+				$config = $config[$key];
+			} else {
+				return null;
+			}
+		}
+
+		return $config;
+	}
+
+
+	/**
 	 * Returns database wrapper.
 	 *
 	 * @return Database\IDatabase database wrapper
@@ -204,10 +223,10 @@ class Configuration
 		if (!self::$database) {
 			try {
 				self::$database = new Database\MySqlDatabase(
-					self::DATABASE_HOST,
-					self::DATABASE_NAME,
-					self::DATABASE_USER,
-					self::DATABASE_PASSWORD
+					self::getConfig('database', 'host'),
+					self::getConfig('database', 'name'),
+					self::getConfig('database', 'user'),
+					self::getConfig('database', 'password')
 				);
 			} catch (\PDOException $e) {
 				self::getMessages()->addMessage('Database error.', Renderable\Messages::TYPE_DANGER);
@@ -426,8 +445,9 @@ class Configuration
 	 */
 	private static function setTimeZone(): void
 	{
-		date_default_timezone_set(self::TIME_ZONE);
-		@ini_set('date.timezone', self::TIME_ZONE);
+		$timeZone = self::getConfig('common', 'time_zone');
+		date_default_timezone_set($timeZone);
+		@ini_set('date.timezone', $timeZone);
 	}
 
 
@@ -459,8 +479,11 @@ class Configuration
 			font-src 'self';
 			script-src 'self' 'unsafe-inline';
 			base-uri 'self';
-			form-action 'self';
-		"));
+			form-action 'self'"
+			. ' ' . PayPal\Core\PayPalConstants::OPENID_REDIRECT_SANDBOX_URL
+			. ' ' . PayPal\Core\PayPalConstants::OPENID_REDIRECT_LIVE_URL
+			. ';
+		'));
 	}
 
 
@@ -472,7 +495,11 @@ class Configuration
 	private static function initializeSession(): void
 	{
 		$session = self::getSession();
-		$session->setExpiration('30 days');
+		$session->setExpiration(self::getConfig('session', 'expiration'));
+
+		// set basket session expiration
+		self::getBasketService()->setExpiration(self::getConfig('session', 'login_expiration'));
+
 		if ($session->exists()) {
 			$session->start();
 		}

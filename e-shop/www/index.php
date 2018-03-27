@@ -27,9 +27,9 @@ siteHeader();
 			<div class="card mb-3 box-shadow product-box">
 				<?php
 
-				$productUrl = (new Nette\Http\Url('product.php'))->setQueryParameter('id', escape($product['id']));
+				$productUrl = (new Nette\Http\Url('product.php'))->setQueryParameter('id', $product['id']);
 				$buyUrl = (new Nette\Http\Url('buy.php'))->setQuery([
-					'productId' => escape($product['id']),
+					'productId' => $product['id'],
 					'backLink' => 'index.php',
 				]);
 

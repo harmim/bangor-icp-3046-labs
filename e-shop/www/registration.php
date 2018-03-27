@@ -44,7 +44,7 @@ if (isset($post['submit'])) {
 			);
 
 			$user->login($post['email'], $post['password']);
-			$user->setExpiration('7 days');
+			$user->setExpiration(Configuration::getConfig('session', 'login_expiration'));
 			$messages->addMessage('You have been successfully registered and logged in.', $messages::TYPE_SUCCESS);
 
 			if ($backLink = Configuration::getHttpRequest()->getCookie('loginBackLink')) {

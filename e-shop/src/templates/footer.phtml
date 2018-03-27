@@ -8,12 +8,14 @@
 
 declare(strict_types=1);
 
+use Main\Configuration;
+
 ?>
 
 <div class="container">
 	<span class="text-muted">
 		©<?= date('Y'); ?>
 		<a href="http://www.linkedin.com/in/dominik-harmim" target="_blank">Dominik Harmim</a>
-		| Inside
+		| <?= Configuration::getConfig('common', 'title'); ?>
 	</span>
 </div>

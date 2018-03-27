@@ -28,14 +28,14 @@ VALUES
 
 
 -- payment methods
-INSERT INTO `payment_method` (`name`, `price`)
+INSERT INTO `payment_method` (`id`, `name`, `price`)
 VALUES
-	('Cash Payment', 0.0),
-	('PayPal payment', 0.0);
+	(1, 'Cash Payment', 0.0),
+	(2, 'PayPal payment', 0.0);
 
 
 -- shipping methods
-INSERT INTO `shipping_method` (`name`, `price`)
+INSERT INTO `shipping_method` (`id`, `name`, `price`)
 VALUES
-	('Home Delivery', 5.0),
-	('Store Delivery', 0.0);
+	(1, 'Home Delivery', 5.0),
+	(2, 'Store Delivery', 0.0);

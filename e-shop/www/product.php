@@ -27,7 +27,7 @@ if ($id && ($product = $productService->getProductById((int) $id))) {
 	Configuration::getMessages()->addMessage('Product not found.', Renderable\Messages::TYPE_DANGER);
 }
 
-$productUrl = (new Nette\Http\Url('product.php'))->setQueryParameter('id', escape($id));
+$productUrl = (new Nette\Http\Url('product.php'))->setQueryParameter('id', $id);
 
 siteHeader();
 
@@ -69,7 +69,7 @@ siteHeader();
 								<i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy
 							</button>
 
-							<input type="hidden" name="productId" value="<?= escape($product['id']); ?>">
+							<input type="hidden" name="productId" value="<?= $product['id']; ?>">
 							<input type="hidden" name="backLink" value="<?= $productUrl; ?>">
 						</div>
 					</div>

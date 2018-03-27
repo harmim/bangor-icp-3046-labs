@@ -17,9 +17,9 @@ use Main\Configuration;
 
 <title><?= escape(Configuration::getTitle()); ?></title>
 
-<meta name="description" content="Inside - hardware components e-shop.">
+<meta name="description" content="<?= Configuration::getConfig('common', 'description'); ?>">
 <meta name="author" content="DominikHarmim, harmim6@gmail.com">
-<meta name="keywords" content="Inside, e-shop, PHP, hardware components e-shop, hardware components, hardware">
+<meta name="keywords" content="<?= Configuration::getConfig('common', 'keywords'); ?>">
 
 <link rel="Shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
 

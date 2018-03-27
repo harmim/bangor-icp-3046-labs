@@ -61,7 +61,7 @@ siteHeader();
 
 <?php if ($basketProductsCount): ?>
 	<h4 class="d-flex justify-content-between align-items-center mb-3">
-		<span class="text-muted">Your Basket</span> <span class="badge badge-secondary badge-pill"><?= escape($basketProductsCount); ?></span>
+		<span class="text-muted">Your Basket</span> <span class="badge badge-secondary badge-pill"><?= $basketProductsCount; ?></span>
 	</h4>
 
 	<form method="post" action="basket.php">
@@ -81,8 +81,7 @@ siteHeader();
 
 					$product = $productData['product'];
 					$quantity = (int) $productData['quantity'];
-					$escapedProductId = escape($product['id']);
-					$productUrl = (new Nette\Http\Url('product.php'))->setQueryParameter('id', $escapedProductId);
+					$productUrl = (new Nette\Http\Url('product.php'))->setQueryParameter('id', $product['id']);
 
 					?>
 
@@ -94,16 +93,16 @@ siteHeader();
 						<td class="text-right">
 							<div class="btn-group plus-minus-number">
 								<span class="px-2 d-none d-lg-block">
-									<button type="button" disabled class="btn btn-danger btn-number" data-type="minus" data-field="quantity<?= $escapedProductId; ?>">
+									<button type="button" disabled class="btn btn-danger btn-number" data-type="minus" data-field="quantity<?= $product['id']; ?>">
 										<i class="fa fa-minus"></i>
 									</button>
 								</span>
 
-								<label for="quantity<?= $escapedProductId; ?>"></label>
-								<input type="number" id="quantity<?= $escapedProductId; ?>" name="quantity<?= $escapedProductId; ?>" class="form-control input-number" value="<?= escape($quantity); ?>" min="1" max="100" size="5">
+								<label for="quantity<?= $product['id']; ?>"></label>
+								<input type="number" id="quantity<?= $product['id']; ?>" name="quantity<?= $product['id']; ?>" class="form-control input-number" value="<?= $quantity; ?>" min="1" max="100" size="5">
 
 								<span class="px-2 d-none d-lg-block">
-									<button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quantity<?= $escapedProductId; ?>">
+									<button type="button" class="btn btn-success btn-number" data-type="plus" data-field="quantity<?= $product['id']; ?>">
 										<i class="fa fa-plus"></i>
 									</button>
 								</span>
@@ -115,7 +114,7 @@ siteHeader();
 						</td>
 
 						<td class="text-right">
-							<button type="submit" value="<?= escape($product['id']); ?>" name="remove" class="btn btn-sm">
+							<button type="submit" value="<?= $product['id']; ?>" name="remove" class="btn btn-sm">
 								<i class="fa fa-times fa-2x text-danger"></i>
 							</button>
 						</td>

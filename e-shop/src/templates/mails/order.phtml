@@ -96,8 +96,8 @@ use Main\Helpers;
 																case 'product':
 															?>
 																	<tr>
-																		<th scope="row" style="text-align: left;"><a href="<?= Configuration::DOMAIN . '/' . (new Nette\Http\Url('product.php'))->setQueryParameter('id', escape($item['product'])); ?>"><?= escape($item['name']); ?></a></th>
-																		<td style="text-align: center;"><?= escape($item['quantity']); ?></td>
+																		<th scope="row" style="text-align: left;"><a href="<?= Configuration::getConfig('common', 'domain') . '/' . (new Nette\Http\Url('product.php'))->setQueryParameter('id', $item['product']); ?>"><?= escape($item['name']); ?></a></th>
+																		<td style="text-align: center;"><?= $item['quantity']; ?></td>
 																		<td style="text-align: right; color: red;"><?= Helpers::formatPrice((float) $item['price'] * (int) $item['quantity']); ?></td>
 																	</tr>
 																	<?php break; ?>
@@ -164,7 +164,7 @@ use Main\Helpers;
 							<tr>
 								<td style="padding: 0 10px;">
 									<p style="line-height: 1.4em; margin: 0 0 8px; text-align: center; padding: 0; font-size: 13px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #4b4b4b;">
-										Email sent from <a style="text-decoration: none; color: #009eeb;" href="<?= Configuration::DOMAIN; ?>"><?= Configuration::DOMAIN_WITHOUT_PROTOCOL; ?></a>
+										Email sent from <a style="text-decoration: none; color: #009eeb;" href="<?= Configuration::getConfig('common', 'domain'); ?>"><?= Configuration::getConfig('common', 'title'); ?></a>
 									</p>
 								</td>
 							</tr>
