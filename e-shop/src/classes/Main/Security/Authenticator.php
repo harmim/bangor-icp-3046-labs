@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Main\Security;
 
 use Main\Configuration;
+use Main\ValidationException;
 use Nette;
 
 
@@ -37,9 +38,12 @@ class Authenticator implements IAuthenticator
 			throw new AuthenticationException($errorMessage, self::INVALID_CREDENTIAL);
 
 		} elseif (Passwords::needsRehash($user['password'])) {
-			$userService->updateUser($user['id'], [
-				'password' => $password,
-			]);
+			try {
+				$userService->updateUser($user['id'], [
+					'password' => $password,
+				]);
+			} catch (ValidationException $e) {
+			}
 		}
 
 		unset($user['password']); // return user without password due to security reasons

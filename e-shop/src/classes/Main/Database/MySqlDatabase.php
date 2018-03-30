@@ -155,14 +155,12 @@ class MySqlDatabase implements IDatabase
 	 *
 	 * @param array $identifiers array of identifiers
 	 * @return void
-	 *
-	 * @throws \Exception if there are some invalid identifiers
 	 */
 	private function checkIdentifiers(array $identifiers): void
 	{
 		foreach ($identifiers as $identifier) {
 			if (!preg_match('~^[\w\-]+$~ui', $identifier)) {
-				throw new \Exception('Invalid identifier in SQL query.');
+				throw new \UnexpectedValueException('Invalid identifier in SQL query.');
 			}
 		}
 	}

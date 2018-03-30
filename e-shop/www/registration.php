@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 use Main\Configuration;
 use Main\Renderable;
+use Main\Security;
+use Main\ValidationException;
 
 
 require_once __DIR__ . '/../src/configuration.php';
@@ -55,7 +57,7 @@ if (isset($post['submit'])) {
 				Configuration::redirect('index.php');
 			}
 
-		} catch (UnexpectedValueException $e) {
+		} catch (ValidationException | Security\AuthenticationException $e) {
 			$messages->addMessage($e->getMessage(), $messages::TYPE_DANGER);
 		}
 

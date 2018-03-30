@@ -30,7 +30,7 @@ class Payment
 	 * @param float $shippingPrice shipping price
 	 * @return PayPal\Api\Payment  payment object with approval link for redirect
 	 *
-	 * @throws \RuntimeException in case of payment execution error, with user message
+	 * @throws PayPalException in case of payment execution error, with user message
 	 */
 	public static function createPayment(
 		array $products,
@@ -84,8 +84,8 @@ class Payment
 
 			return $payment;
 
-		} catch (\Throwable $e) {
-			throw new \RuntimeException('PayPal create payment error.', $e->getCode(), $e);
+		} catch (\Exception $e) {
+			throw new PayPalException('PayPal create payment error.', $e->getCode(), $e);
 		}
 	}
 
@@ -97,7 +97,7 @@ class Payment
 	 * @param string $payerId Payer ID
 	 * @return PayPal\Api\Payment executed Payment object
 	 *
-	 * @throws \RuntimeException in case of payment execution error, with user message
+	 * @throws PayPalException in case of payment execution error, with user message
 	 */
 	public static function executePayment(string $paymentId, string $payerId): PayPal\Api\Payment
 	{
@@ -109,8 +109,8 @@ class Payment
 
 			return PayPal\Api\Payment::get($paymentId, $apiContext);
 
-		} catch (\Throwable $e) {
-			throw new \RuntimeException('PayPal execute payment error.', $e->getCode(), $e);
+		} catch (\Exception $e) {
+			throw new PayPalException('PayPal execute payment error.', $e->getCode(), $e);
 		}
 	}
 

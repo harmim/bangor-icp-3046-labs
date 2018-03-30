@@ -11,6 +11,7 @@ declare(strict_types=1);
 use Main\Configuration;
 use Main\Renderable;
 use Main\Security;
+use Main\ValidationException;
 
 
 require_once __DIR__ . '/../src/configuration.php';
@@ -59,7 +60,7 @@ if (isset($post['submit'])) {
 			$identity = new Security\Identity($updatedUser['id'], $updatedUser);
 			$user->setIdentity($identity);
 
-		} catch (UnexpectedValueException $e) {
+		} catch (ValidationException $e) {
 			$messages->addMessage($e->getMessage(), $messages::TYPE_DANGER);
 		}
 	} else {

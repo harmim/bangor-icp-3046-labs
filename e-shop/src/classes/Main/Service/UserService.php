@@ -11,6 +11,7 @@ namespace Main\Service;
 use Main\Database;
 use Main\Helpers;
 use Main\Security;
+use Main\ValidationException;
 use Main\Validators;
 use Nette;
 
@@ -89,7 +90,7 @@ class UserService
 	 * @param array $data associative array with data to be updated
 	 * @return self
 	 *
-	 * @throws \UnexpectedValueException in case of validation error, user message will be in exception message then
+	 * @throws ValidationException in case of validation error, user message will be in exception message then
 	 */
 	public function updateUser(int $id, array $data): self
 	{
@@ -113,7 +114,7 @@ class UserService
 	 * @param string $confirmPassword confirm password (optional)
 	 * @return self
 	 *
-	 * @throws \UnexpectedValueException in case of validation error, user message will be in exception message then
+	 * @throws ValidationException in case of validation error, user message will be in exception message then
 	 */
 	public function createUser(
 		string $email,
@@ -143,7 +144,7 @@ class UserService
 	 * @param array $data data to be checked
 	 * @return self
 	 *
-	 * @throws \UnexpectedValueException in case of validation error, user message will be in exception message then
+	 * @throws ValidationException in case of validation error, user message will be in exception message then
 	 */
 	private function checkUserData(array &$data): self
 	{
@@ -151,25 +152,25 @@ class UserService
 			switch ($key) {
 				case 'email':
 					if (!Validators::isEmail($value)) {
-						throw new \UnexpectedValueException('Please enter a valid email address.');
+						throw new ValidationException('Please enter a valid email address.');
 					}
 
 					if ($this->getUserByEmail($value)) {
-						throw new \UnexpectedValueException('Entered email is already registered.');
+						throw new ValidationException('Entered email is already registered.');
 					}
 
 					break;
 
 				case 'password':
 					if (!Validators::isPassword($value)) {
-						throw new \UnexpectedValueException(
+						throw new ValidationException(
 							'Your password must be at least 8 characters long, contain letters and numbers.'
 						);
 					}
 
 					if (isset($data['confirmPassword'])) {
 						if ($value !== $data['confirmPassword']) {
-							throw new \UnexpectedValueException('Fields password and confirm password must matches.');
+							throw new ValidationException('Fields password and confirm password must matches.');
 						}
 						unset($data['confirmPassword']);
 					}

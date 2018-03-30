@@ -12,6 +12,7 @@ use Main\Configuration;
 use Main\Database;
 use Main\Helpers;
 use Main\Security;
+use Main\ValidationException;
 use Nette;
 
 
@@ -160,7 +161,7 @@ class OrderService
 	 * @param Security\IIdentity $user user who created order
 	 * @return self
 	 *
-	 * @throws \UnexpectedValueException in case of supplied invalid data
+	 * @throws ValidationException in case of supplied invalid data
 	 */
 	public function processOrder(array $data, Security\IIdentity $user): self
 	{
@@ -168,10 +169,10 @@ class OrderService
 
 		// fetch shipping and payment
 		if (!($shipping = $this->getShippingMethodById((int) $data['shipping']))) {
-			throw new \UnexpectedValueException('Invalid shipping method entered.');
+			throw new ValidationException('Invalid shipping method entered.');
 		}
 		if (!($payment = $this->getPaymentMethodById((int) $data['payment']))) {
-			throw new \UnexpectedValueException('Invalid payment method entered.');
+			throw new ValidationException('Invalid payment method entered.');
 		}
 
 		// save order

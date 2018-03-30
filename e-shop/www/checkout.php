@@ -14,6 +14,7 @@ use Main\Renderable;
 use Main\Security;
 use Main\Helpers;
 use Main\Service;
+use Main\ValidationException;
 
 
 require_once __DIR__ . '/../src/configuration.php';
@@ -32,7 +33,7 @@ if (isset($query['paypalPayment'])) {
 			$orderData = $orderSection->orderData;
 			$orderData['is_paid'] = 1;
 
-		} catch (RuntimeException $e) {
+		} catch (PayPal\PayPalException $e) {
 			$messages->addMessage($e->getMessage(), $messages::TYPE_DANGER);
 		}
 	} else {
@@ -114,7 +115,7 @@ if (isset($orderData['submit'])) {
 
 			Configuration::redirect('resume.php');
 
-		} catch (UnexpectedValueException | RuntimeException $e) {
+		} catch (ValidationException | PayPal\PayPalException $e) {
 			$messages->addMessage($e->getMessage(), $messages::TYPE_DANGER);
 		}
 	} else {
