@@ -32,8 +32,11 @@ class Payment
 	 *
 	 * @throws \RuntimeException in case of payment execution error, with user message
 	 */
-	public static function createPayment(array $products, float $productsPrice, float $shippingPrice): PayPal\Api\Payment
-	{
+	public static function createPayment(
+		array $products,
+		float $productsPrice,
+		float $shippingPrice
+	): PayPal\Api\Payment {
 		try {
 			$currency = Configuration::getConfig('common', 'currency');
 			$domain = Configuration::getConfig('common', 'domain');

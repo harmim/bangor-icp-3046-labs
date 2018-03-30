@@ -61,7 +61,8 @@ siteHeader();
 
 <?php if ($basketProductsCount): ?>
 	<h4 class="d-flex justify-content-between align-items-center mb-3">
-		<span class="text-muted">Your Basket</span> <span class="badge badge-secondary badge-pill"><?= $basketProductsCount; ?></span>
+		<span class="text-muted">Your Basket</span>
+		<span class="badge badge-secondary badge-pill"><?= $basketProductsCount; ?></span>
 	</h4>
 
 	<form method="post" action="basket.php">

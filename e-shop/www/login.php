@@ -73,11 +73,14 @@ siteHeader();
 
 			<hr class="mb-4">
 
-			<button class="btn btn-primary btn-lg btn-block" type="submit" value="submit" name="submit">Login</button>
+			<button class="btn btn-primary btn-lg btn-block" type="submit" value="submit" name="submit">
+				Login
+			</button>
 		</form>
 
 		<p>
-			New customer? <a href="/registration.php">Create your account</a>
+			New customer?
+			<a href="/registration.php">Create your account</a>
 		</p>
 	</div>
 </div>

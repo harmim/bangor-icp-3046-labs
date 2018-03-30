@@ -280,9 +280,9 @@ class OrderService
 		$result = [];
 		foreach ($orders as $order) {
 			$result[$order['id']] = $order + [
-				'items' => [],
-				'price' => 0.0,
-			];
+					'items' => [],
+					'price' => 0.0,
+				];
 		}
 
 		$sql = '

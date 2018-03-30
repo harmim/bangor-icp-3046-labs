@@ -135,41 +135,50 @@ siteHeader();
 <div class="row">
 	<div class="col-md-4 order-md-2 mb-4">
 		<h4 class="d-flex justify-content-between align-items-center mb-3">
-			<span class="text-muted">Your Basket</span> <span class="badge badge-secondary badge-pill"><?= $basketProductsCount; ?></span>
+			<span class="text-muted">Your Basket</span>
+			<span class="badge badge-secondary badge-pill"><?= $basketProductsCount; ?></span>
 		</h4>
 
 		<table class="table">
-		<thead>
-			<tr>
-				<th scope="col">Product name</th>
-				<th scope="col" class="text-right">Quantity</th>
-				<th scope="col" class="text-right">Price</th>
-			</tr>
-		</thead>
+			<thead>
+				<tr>
+					<th scope="col">Product name</th>
+					<th scope="col" class="text-right">Quantity</th>
+					<th scope="col" class="text-right">Price</th>
+				</tr>
+			</thead>
 
-		<tbody>
-			<?php foreach ($basketService->getBasketProducts() as $productData): ?>
-				<?php
+			<tbody>
+				<?php foreach ($basketService->getBasketProducts() as $productData): ?>
+					<?php
 
-				$product = $productData['product'];
-				$quantity = (int) $productData['quantity'];
-				$productUrl = (new Nette\Http\Url('product.php'))->setQueryParameter('id', $product['id']);
+					$product = $productData['product'];
+					$quantity = (int) $productData['quantity'];
+					$productUrl = (new Nette\Http\Url('product.php'))->setQueryParameter('id', $product['id']);
 
-				?>
+					?>
+
+					<tr>
+						<th scope="row">
+							<small>
+								<a href="/<?= $productUrl; ?>"><?= escape($product['name']); ?></a>
+							</small>
+						</th>
+						<td class="text-right"><small><?= $quantity; ?></small></td>
+						<td class="text-danger text-right">
+							<small><?= Helpers::formatPrice((float) $product['price'] * $quantity); ?></small>
+						</td>
+					</tr>
+				<?php endforeach; ?>
 
 				<tr>
-					<th scope="row"><small><a href="/<?= $productUrl; ?>"><?= escape($product['name']); ?></a></small></th>
-					<td class="text-right"><small><?= $quantity; ?></small></td>
-					<td class="text-danger text-right"><small><?= Helpers::formatPrice((float) $product['price'] * $quantity); ?></small></td>
+					<th scope="row" colspan="2"><small><strong>Total</strong></small></th>
+					<td class="text-danger text-right">
+						<small><strong><?= Helpers::formatPrice($basketService->getBasketProductsPrice()); ?></strong></small>
+					</td>
 				</tr>
-			<?php endforeach; ?>
-
-			<tr>
-				<th scope="row" colspan="2"><small><strong>Total</strong></small></th>
-				<td class="text-danger text-right"><small><strong><?= Helpers::formatPrice($basketService->getBasketProductsPrice()); ?></strong></small></td>
-			</tr>
-		</tbody>
-	</table>
+			</tbody>
+		</table>
 	</div>
 
 	<div class="col-md-8 order-md-1">
@@ -201,7 +210,9 @@ siteHeader();
 			<hr class="mb-4">
 			<div class="custom-control custom-checkbox mb-3">
 				<input type="checkbox" class="custom-control-input" id="shippingAddressEnabled" name="shippingAddressEnabled" value="shippingAddressEnabled" data-toggle="collapse" data-target="#shippingAddressCollapse" aria-expanded="false" aria-controls="shippingAddressCollapse">
-				<label class="custom-control-label" for="shippingAddressEnabled">Shipping address differs from my billing address</label>
+				<label class="custom-control-label" for="shippingAddressEnabled">
+					Shipping address differs from my billing address
+				</label>
 			</div>
 
 			<div class="collapse" id="shippingAddressCollapse">
@@ -253,7 +264,9 @@ siteHeader();
 			</div>
 
 			<hr class="mb-4">
-			<button class="btn btn-primary btn-lg btn-block" type="submit" value="submit" name="submit">Confirm order</button>
+			<button class="btn btn-primary btn-lg btn-block" type="submit" value="submit" name="submit">
+				Confirm order
+			</button>
 		</form>
 	</div>
 </div>

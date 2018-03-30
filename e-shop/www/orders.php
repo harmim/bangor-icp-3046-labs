@@ -67,7 +67,11 @@ siteHeader();
 						case 'product':
 					?>
 							<tr>
-								<th scope="row"><a href="/<?= (new Nette\Http\Url('product.php'))->setQueryParameter('id', $item['product']); ?>"><?= escape($item['name']); ?></a></th>
+								<th scope="row">
+									<a href="/<?= (new Nette\Http\Url('product.php'))->setQueryParameter('id', $item['product']); ?>">
+										<?= escape($item['name']); ?>
+									</a>
+								</th>
 								<td class="text-center"><?= $item['quantity']; ?></td>
 								<td class="text-danger text-right"><?= Helpers::formatPrice((float) $item['price'] * (int) $item['quantity']); ?></td>
 							</tr>
@@ -91,7 +95,9 @@ siteHeader();
 
 				<tr>
 					<th scope="row" colspan="2"><strong>Total</strong></th>
-					<td class="text-danger text-right"><strong><?= Helpers::formatPrice($order['price']); ?></strong></td>
+					<td class="text-danger text-right">
+						<strong><?= Helpers::formatPrice($order['price']); ?></strong>
+					</td>
 				</tr>
 			</tbody>
 		</table>

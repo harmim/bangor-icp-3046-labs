@@ -15,8 +15,8 @@ use Main\Helpers;
 
 <html style="margin: 0; padding: 0;">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="Content-Language" content="" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="Content-Language" content=""/>
 	<title><?= $subject; ?></title>
 	<style type="text/css">
 		.ReadMsgBody { width: 100%; }
@@ -72,8 +72,10 @@ use Main\Helpers;
 											<td class="body" style="border-radius: 3px 3px 3px 3px; padding: 15px 20px 15px 20px; margin: 0; background: #fff; overflow: hidden; border-bottom: 1px solid #d6d6d6;">
 												<p style="line-height:1.4em; margin:0 0 15px; padding:0; font-size:14px; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; color:#333;">
 													Thank you for your order. <br>
-													Your order number <strong><?= $order['id']; ?></strong> is in processing. <br>
-													We will inform you by email about the exact date and time of shipping.
+													Your order number <strong><?= $order['id']; ?></strong> is in
+													processing. <br>
+													We will inform you by email about the exact date and time of
+													shipping.
 												</p>
 											</td>
 										</tr>
@@ -96,7 +98,11 @@ use Main\Helpers;
 																case 'product':
 															?>
 																	<tr>
-																		<th scope="row" style="text-align: left;"><a href="<?= Configuration::getConfig('common', 'domain') . '/' . (new Nette\Http\Url('product.php'))->setQueryParameter('id', $item['product']); ?>"><?= escape($item['name']); ?></a></th>
+																		<th scope="row" style="text-align: left;">
+																			<a href="<?= Configuration::getConfig('common', 'domain') . '/' . (new Nette\Http\Url('product.php'))->setQueryParameter('id', $item['product']); ?>">
+																				<?= escape($item['name']); ?>
+																			</a>
+																		</th>
 																		<td style="text-align: center;"><?= $item['quantity']; ?></td>
 																		<td style="text-align: right; color: red;"><?= Helpers::formatPrice((float) $item['price'] * (int) $item['quantity']); ?></td>
 																	</tr>
@@ -104,23 +110,37 @@ use Main\Helpers;
 
 																<?php case 'shipping': ?>
 																	<tr>
-																		<th scope="row" colspan="2" style="text-align: left;"><strong>Shipping:</strong> <?= escape($item['name']); ?></th>
-																		<td style="text-align: right; color: red;"><?= Helpers::formatPrice($item['price']); ?></td>
+																		<th scope="row" colspan="2" style="text-align: left;">
+																			<strong>Shipping:</strong>
+																			<?= escape($item['name']); ?>
+																		</th>
+																		<td style="text-align: right; color: red;">
+																			<?= Helpers::formatPrice($item['price']); ?>
+																		</td>
 																	</tr>
 																	<?php break; ?>
 
 																<?php case 'payment': ?>
 																	<tr>
-																		<th scope="row" colspan="2" style="text-align: left;"><strong>Payment:</strong> <?= escape($item['name']); ?></th>
-																		<td style="text-align: right; color: red;"><?= Helpers::formatPrice($item['price']); ?></td>
+																		<th scope="row" colspan="2" style="text-align: left;">
+																			<strong>Payment:</strong>
+																			<?= escape($item['name']); ?>
+																		</th>
+																		<td style="text-align: right; color: red;">
+																			<?= Helpers::formatPrice($item['price']); ?>
+																		</td>
 																	</tr>
 																	<?php break; ?>
 															<?php endswitch; ?>
 														<?php endforeach; ?>
 
 														<tr>
-															<th scope="row" colspan="2" style="text-align: left;"><strong>Total</strong></th>
-															<td style="text-align: right; color: red;"><strong><?= Helpers::formatPrice($order['price']); ?></strong></td>
+															<th scope="row" colspan="2" style="text-align: left;">
+																<strong>Total</strong>
+															</th>
+															<td style="text-align: right; color: red;">
+																<strong><?= Helpers::formatPrice($order['price']); ?></strong>
+															</td>
 														</tr>
 													</tbody>
 												</table>
@@ -142,7 +162,7 @@ use Main\Helpers;
 											</td>
 										</tr>
 
-										<?php if ( ! empty($order['shipping_forename'])): ?>
+										<?php if (!empty($order['shipping_forename'])): ?>
 											<tr>
 												<td class="body" style="border-radius: 3px 3px 3px 3px; padding: 15px 20px 15px 20px; margin: 0; background: #fff; overflow: hidden; border-bottom: 1px solid #d6d6d6;">
 													<strong>Shipping address</strong>
@@ -164,7 +184,10 @@ use Main\Helpers;
 							<tr>
 								<td style="padding: 0 10px;">
 									<p style="line-height: 1.4em; margin: 0 0 8px; text-align: center; padding: 0; font-size: 13px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #4b4b4b;">
-										Email sent from <a style="text-decoration: none; color: #009eeb;" href="<?= Configuration::getConfig('common', 'domain'); ?>"><?= Configuration::getConfig('common', 'title'); ?></a>
+										Email sent from
+										<a style="text-decoration: none; color: #009eeb;" href="<?= Configuration::getConfig('common', 'domain'); ?>">
+											<?= Configuration::getConfig('common', 'title'); ?>
+										</a>
 									</p>
 								</td>
 							</tr>
