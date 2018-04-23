@@ -36,7 +36,7 @@ grunt:
 
 .PHONY: code-checker
 code-checker: composer
-	cd $(CODE_CHECKER_DIR) && composer install
+	cd $(CODE_CHECKER_DIR) && composer install --no-interaction --no-dev
 ifeq ($(FIX), 1)
 	$(CODE_CHECKER) -d src/ --short-arrays --strict-types -l -f
 	$(CODE_CHECKER) -d www/ -i js/ -i css/ --short-arrays --strict-types -l -f
